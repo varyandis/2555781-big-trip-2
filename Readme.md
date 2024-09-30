@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Александра Глен](https://up.htmlacademy.ru/ecmascript-individual/2/user/2555781).
-* Наставник: `Неизвестно`.
+* Студент: [Александра Герасимова](https://up.htmlacademy.ru/ecmascript-individual/2/user/2555781).
+* Наставник: [Олег Глущенко](https://htmlacademy.ru/profile/id305355).
 
 ---
 
