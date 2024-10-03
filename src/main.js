@@ -1,34 +1,15 @@
 import {render, RenderPosition} from './render.js';
 import TripMainInfoView from './view/info-view.js';
 import TripFiltersView from './view/filters-view.js';
-import ListSortView from './view/sort-view.js';
-import EventsListView from './view/events-list-view.js';
-import EventsItemView from './view/events-item.js';
-import PointEditView from './view/point-edit-view.js';
-import NewPointView from './view/point-new-view.js';
+import Board from './presenter/board.js';
 
-const siteHeaderElement = document.querySelector('.trip-main');
-const siteHeaderFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
+const siteMainSortElement = document.querySelector('.trip-events');
+const siteMainFiltersElement = document.querySelector('.trip-controls__filters');
+const siteMainInfoElement = document.querySelector('.trip-main');
 
-const siteMainElement = document.querySelector('.page-main');
-const siteMainSortElement = siteMainElement.querySelector('.page-body__container');
+render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
+render(new TripFiltersView(), siteMainFiltersElement , RenderPosition.AFTERBEGIN);
 
-// const siteHeaderElement = siteMainElement.querySelector('.trip-events');
+const BoardPresenter = new Board({boardContainer: siteMainSortElement});
 
-// render(new MessageView(), siteHeaderElement);
-render(new TripMainInfoView(), siteHeaderElement, RenderPosition.AFTERBEGIN);
-render(new TripFiltersView(), siteHeaderFiltersElement, RenderPosition.AFTERBEGIN);
-render(new ListSortView(), siteMainSortElement);
-render(new EventsListView(), siteMainSortElement);
-
-const siteMainItemElement = siteMainElement.querySelector('.trip-events__list');
-
-render(new PointEditView(), siteMainItemElement);
-
-render(new NewPointView(), siteMainItemElement);
-
-render(new EventsItemView(), siteMainItemElement);
-render(new EventsItemView(), siteMainItemElement);
-render(new EventsItemView(), siteMainItemElement);
-
-
+BoardPresenter.init();
