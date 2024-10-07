@@ -23,6 +23,4 @@ export default class Board {
     render(new EventsItemView(), this.TaskListComponent.getElement());
     render(new EventsItemView(), this.TaskListComponent.getElement());
   }
-
-
 }
