@@ -1,12 +1,13 @@
 import { createElement } from '../render.js';
-import { humanizePointDueDate } from '../utils.js';
+import { humanizePointDueDateEdite } from '../utils.js';
+import { capitalizeFirstLetter } from '../utils.js';
 
 const createPointEditTemplate = (point) => {
 // console.log(point)
   const {basePrice, dateFrom, dateTo, destination, id, isFavorite, offers, type} = point;
-  const dateFromHumanize = humanizePointDueDate(dateFrom);
-  const dateToHumanize = humanizePointDueDate(dateTo);
-
+  const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
+  const dateToHumanize = humanizePointDueDateEdite(dateTo);
+  const typePoint = capitalizeFirstLetter(type);
 
   // console.log(dateFromHumanize)
   // console.log(dateToHumanize)
