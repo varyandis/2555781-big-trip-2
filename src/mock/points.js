@@ -5,10 +5,10 @@ const mockPoints = [
   {
     id: 'f1',
     basePrice: 1100,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2019-07-10T23:55:56.845Z',
+    dateTo: '2019-07-11T23:23:13.375Z',
     destination: '1',
-    isFavorite: false,
+    isFavorite: true,
     offers: [
       '31','32','33',
     ],
@@ -17,10 +17,10 @@ const mockPoints = [
   {
     id: 'f2',
     basePrice: 800,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2018-07-10T19:55:56.845Z',
+    dateTo: '2018-07-11T11:19:13.375Z',
     destination: '2',
-    isFavorite: false,
+    isFavorite: true,
     offers: [
       '31','32','33',
     ],
@@ -29,8 +29,8 @@ const mockPoints = [
   {
     id: 'f3',
     basePrice: 700,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2017-07-10T20:55:56.845Z',
+    dateTo: '2017-07-11T11:20:13.375Z',
     destination: '3',
     isFavorite: false,
     offers: [
@@ -41,10 +41,10 @@ const mockPoints = [
   {
     id: 'f4',
     basePrice: 600,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2016-07-10T21:55:56.845Z',
+    dateTo: '2016-07-11T11:21:13.375Z',
     destination: '4',
-    isFavorite: false,
+    isFavorite: true,
     offers: [
       '31', '33',
     ],
@@ -53,8 +53,8 @@ const mockPoints = [
   {
     id: 'f5',
     basePrice: 500,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2015-07-10T18:55:56.845Z',
+    dateTo: '2015-07-11T11:18:13.375Z',
     destination: '5',
     isFavorite: false,
     offers: [
@@ -65,10 +65,10 @@ const mockPoints = [
   {
     id: 'f6',
     basePrice: 400,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2020-07-10T17:55:56.845Z',
+    dateTo: '2020-07-11T11:17:13.375Z',
     destination: '6',
-    isFavorite: false,
+    isFavorite: true,
     offers: [
       '32',
     ],
@@ -77,8 +77,8 @@ const mockPoints = [
   {
     id: 'f7',
     basePrice: 300,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2021-07-10T15:55:56.845Z',
+    dateTo: '2021-07-11T11:15:13.375Z',
     destination: '7',
     isFavorite: false,
     offers: [
@@ -89,10 +89,10 @@ const mockPoints = [
   {
     id: 'f8',
     basePrice: 200,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2022-07-10T14:55:56.845Z',
+    dateTo: '2022-07-11T11:14:13.375Z',
     destination: '8',
-    isFavorite: false,
+    isFavorite: true,
     offers: [
       '31','32','33',
     ],
@@ -101,8 +101,8 @@ const mockPoints = [
   {
     id: 'f9',
     basePrice: 100,
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: '2023-07-10T13:55:56.845Z',
+    dateTo: '2023-07-11T11:13:13.375Z',
     destination: '9',
     isFavorite: false,
     offers: [],
@@ -110,6 +110,6 @@ const mockPoints = [
   },
 ];
 
-const getRandomPoints = () => getRandomArrayElement(mockPoints);
+const getRandomPoint = () => getRandomArrayElement(mockPoints);
 
-export {mockPoints, getRandomPoints };
+export {mockPoints, getRandomPoint };

@@ -12,6 +12,6 @@ const pointsModel = new PointsModel();
 render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
 render(new TripFiltersView(), siteMainFiltersElement , RenderPosition.AFTERBEGIN);
 
-const BoardPresenter = new Board({boardContainer: siteMainSortElement, eventsModel: pointsModel});
+const BoardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel});
 
 BoardPresenter.init();

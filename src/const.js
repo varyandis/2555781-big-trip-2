@@ -1,3 +1,4 @@
-const EVENTTYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const EVENT_TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const POINTS_COUNT = 3;
 
-export {EVENTTYPE};
+export {EVENT_TYPE, POINTS_COUNT};
