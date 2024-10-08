@@ -9,11 +9,16 @@ import NewPointView from '../view/point-new-view.js';
 export default class Board {
   TaskListComponent = new EventsListView();
 
-  constructor({boardContainer}) {
+  constructor({boardContainer, eventsModel: pointsModel}) {
     this.boardContainer = boardContainer;
+    this.pointsModel = pointsModel;
   }
 
   init() {
+    console.log(this.pointsModel.getEvent())
+
+    this.boardEvent = this.pointsModel.getEvent()
+    console.log(this.boardEvent)
     render(new ListSortView(), this.boardContainer);
     render(this.TaskListComponent, this.boardContainer);
     render(new PointEditView(), this.TaskListComponent.getElement());

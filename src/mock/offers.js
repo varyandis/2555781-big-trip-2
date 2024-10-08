@@ -1,23 +1,7 @@
 const mockOffers = [
   {
     type: 'taxi',
-    offers: [
-      {
-        id: '31',
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: '32',
-        title: 'Add luggage',
-        price: 200
-      },
-      {
-        id: '33',
-        title: 'Switch to comfort class',
-        price: 300
-      },
-    ]
+    offers: []
   },
   {
     type: 'bus',
@@ -81,23 +65,7 @@ const mockOffers = [
   },
   {
     type: 'drive',
-    offers: [
-      {
-        id: '31',
-        title: 'Upgrade to a business class',
-        price: 120
-      },
-      {
-        id: '32',
-        title: 'Add luggage',
-        price: 200
-      },
-      {
-        id: '33',
-        title: 'Switch to comfort class',
-        price: 300
-      },
-    ]
+    offers: []
   },
   {
     type: 'flight',

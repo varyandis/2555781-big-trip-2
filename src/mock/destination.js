@@ -3,12 +3,7 @@ const mockDestination = [
     id: '1',
     description: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
     name: 'Chamonix',
-    pictures: [
-      {
-        src: 'https://loremflickr.com/248/152?random=1',
-        description: 'Chamonix parliament building'
-      }
-    ]
+    pictures: []
   },
   {
     id: '2',
