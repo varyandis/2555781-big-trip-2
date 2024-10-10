@@ -1,8 +1,5 @@
 import { createElement } from '../render.js';
-import { humanizePointDueTime } from '../utils.js';
-import { humanizePointDueDateItem } from '../utils.js';
-import { capitalizeFirstLetter } from '../utils.js';
-import { getListOffer } from '../utils.js';
+import { humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getDestinationName } from '../utils.js';
 
 
 const createSelectedOffersTemplate = (offers, type) => {
@@ -18,12 +15,15 @@ const createSelectedOffersTemplate = (offers, type) => {
 };
 
 const createEventsItemTemplate = (point) => {
-  const {basePrice, dateFrom, dateTo, isFavorite, offers, type} = point;
+  const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
+
   const timeFromHumanize = humanizePointDueTime(dateFrom);
   const timeToHumanize = humanizePointDueTime(dateTo);
-  const pointFavorite = isFavorite ? 'event__favorite-btn--active' : '';
   const dateFromHumanize = humanizePointDueDateItem(dateFrom);
   const typePoint = capitalizeFirstLetter(type);
+  const pointFavorite = isFavorite ? 'event__favorite-btn--active' : '';
+  const namePoint = getDestinationName(destination);
+
 
   return (
     `<li class="trip-events__item">
@@ -32,7 +32,7 @@ const createEventsItemTemplate = (point) => {
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
                 </div>
-                <h3 class="event__title">${typePoint} Amsterdam</h3>
+                <h3 class="event__title">${typePoint} ${namePoint}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
                     <time class="event__start-time" datetime="${timeFromHumanize}">${timeFromHumanize}</time>

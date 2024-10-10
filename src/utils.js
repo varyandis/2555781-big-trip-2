@@ -24,8 +24,10 @@ const getListOffer = (typePoint) => mockOffers.find((item) => item.type === type
 
 const getListDestination = (id) => mockDestination.find((item) => item.id === id);
 
+const getDestinationName = (destination) => mockDestination.find((index) => index.id === destination).name;
+
 const isTruthy = (value) => value === null || value === '' || value.length === 0;
 
-export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getListDestination,isTruthy
+export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getListDestination,isTruthy, getDestinationName
 
 };
