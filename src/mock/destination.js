@@ -13,6 +13,10 @@ const mockDestination = [
       {
         src: 'https://loremflickr.com/248/152?random=2',
         description: 'Geneva parliament building'
+      },
+      {
+        src: 'https://loremflickr.com/248/152?random=20',
+        description: 'Geneva parliament building'
       }
     ]
   },

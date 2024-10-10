@@ -4,7 +4,7 @@ import { humanizePointDueDateItem } from '../utils.js';
 import { capitalizeFirstLetter } from '../utils.js';
 
 const createEventsItemTemplate = (point) => {
-  console.log(point);
+  // console.log(point);
   const {basePrice, dateFrom, dateTo, destination, id, isFavorite, offers, type} = point;
   const timeFromHumanize = humanizePointDueTime(dateFrom);
   const timeToHumanize = humanizePointDueTime(dateTo);

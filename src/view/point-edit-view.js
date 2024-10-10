@@ -1,17 +1,14 @@
 import { createElement } from '../render.js';
 import { humanizePointDueDateEdite } from '../utils.js';
 import { capitalizeFirstLetter } from '../utils.js';
+import {getListOffers, getListDestination, isTruthy} from '../utils.js';
 
 const createPointEditTemplate = (point) => {
-// console.log(point)
   const {basePrice, dateFrom, dateTo, destination, id, isFavorite, offers, type} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
   const typePoint = capitalizeFirstLetter(type);
-
-  // console.log(dateFromHumanize)
-  // console.log(dateToHumanize)
-
+  const listOffers = getListOffers(type).offers;
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -77,7 +74,7 @@ const createPointEditTemplate = (point) => {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-1">
-                      Flight
+                      ${typePoint}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
                     <datalist id="destination-list-1">
@@ -160,15 +157,34 @@ const createPointEditTemplate = (point) => {
                       </div>
                     </div>
                   </section>
-
-                  <section class="event__section  event__section--destination">
-                    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-                    <p class="event__destination-description">Chamonix-Mont-Blanc (usually shortened to Chamonix) is a resort area near the junction of France, Switzerland and Italy. At the base of Mont Blanc, the highest summit in the Alps, it's renowned for its skiing.</p>
-                  </section>
+                  ${createDestinationTemplate(destination)}
                 </section>
               </form>`
   );
 };
+
+function createDestinationTemplate(destination) {
+  if (isTruthy(destination)) {
+    return '';
+  }
+
+  const destinationPoint = getListDestination(destination);
+  const pictures = destinationPoint.pictures;
+  return (
+    `<section class="event__details">
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+        <p class="event__destination-description">${destinationPoint.description}</p>
+
+        <div class="event__photos-container">
+          <div class="event__photos-tape">
+            ${pictures.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
+          </div>
+        </div>
+      </section>
+    </section>`
+  );
+}
 
 export default class PointEditView {
   constructor({point}) {

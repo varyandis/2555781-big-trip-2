@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
+import { mockOffers } from './mock/offers.js';
+import { mockDestination } from './mock/destination.js';
 
-const DATE_POINT_EDITE_FORMAT = 'DD/MM/YYYY HH:mm';
+const DATE_POINT_EDITE_FORMAT = 'DD/MM/YY HH:mm';
 const TIME_FORMAT = 'HH:mm';
 const DATE_EVENTS_ITEM_FORMAT = 'MMM DD';
 
@@ -18,4 +20,12 @@ const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slic
 
 // console.log(humanizeTaskDueDate('2019-07-10T22:55:56.845Z'))
 
-export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter};
+const getListOffers = (typePoint) => mockOffers.find((item) => item.type === typePoint);
+
+const getListDestination = (id) => mockDestination.find((item) => item.id === id);
+
+const isTruthy = (value) => value === null || value === '';
+
+export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffers, getListDestination,isTruthy
+
+};

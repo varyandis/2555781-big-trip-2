@@ -103,7 +103,7 @@ const mockPoints = [
     basePrice: 100,
     dateFrom: '2023-09-10T13:55:56.845Z',
     dateTo: '2023-09-11T11:13:13.375Z',
-    destination: '9',
+    destination: null,
     isFavorite: false,
     offers: [],
     type: 'restaurant'
