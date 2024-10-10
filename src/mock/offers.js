@@ -8,17 +8,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '1Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '1Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '1Switch to comfort class',
         price: 300
       },
     ]
@@ -28,17 +28,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '2Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '2Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '2Switch to comfort class',
         price: 300
       },
     ]
@@ -48,17 +48,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '3Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '3Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '3Switch to comfort class',
         price: 300
       },
     ]
@@ -72,17 +72,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '4Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '4Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '4Switch to comfort class',
         price: 300
       },
     ]
@@ -92,17 +92,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '5Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '5Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '5Switch to comfort class',
         price: 300
       },
     ]
@@ -112,17 +112,17 @@ const mockOffers = [
     offers: [
       {
         id: '31',
-        title: 'Upgrade to a business class',
+        title: '6Upgrade to a business class',
         price: 120
       },
       {
         id: '32',
-        title: 'Add luggage',
+        title: '6Add luggage',
         price: 200
       },
       {
         id: '33',
-        title: 'Switch to comfort class',
+        title: '6Switch to comfort class',
         price: 300
       },
     ]

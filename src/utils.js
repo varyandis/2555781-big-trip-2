@@ -20,12 +20,12 @@ const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slic
 
 // console.log(humanizeTaskDueDate('2019-07-10T22:55:56.845Z'))
 
-const getListOffers = (typePoint) => mockOffers.find((item) => item.type === typePoint);
+const getListOffer = (typePoint) => mockOffers.find((item) => item.type === typePoint);
 
 const getListDestination = (id) => mockDestination.find((item) => item.id === id);
 
-const isTruthy = (value) => value === null || value === '';
+const isTruthy = (value) => value === null || value === '' || value.length === 0;
 
-export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffers, getListDestination,isTruthy
+export {getRandomArrayElement, humanizePointDueDateEdite, humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getListDestination,isTruthy
 
 };
