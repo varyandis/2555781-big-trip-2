@@ -1,4 +1,5 @@
 import { createElement } from '../render.js';
+import { mockDestination } from '../mock/destination.js';
 import {humanizePointDueDateEdite, capitalizeFirstLetter, getListOffer, getListDestination, isTruthy} from '../utils.js';
 
 const createOffersTemplate = (offers, type) => {
@@ -48,12 +49,13 @@ const createDestinationTemplate = (destination) => {
   );
 };
 
+const createDestinationListTemplate = () => mockDestination.map(({name}) => `<option value="${name}"></option>`)
+
 const createPointEditTemplate = (point) => {
   const {basePrice, dateFrom, dateTo, destination, id, offers, type} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
   const typePoint = capitalizeFirstLetter(type);
-
 
   return (
     `<form class="event event--edit" action="#" method="post">
@@ -122,10 +124,7 @@ const createPointEditTemplate = (point) => {
                       ${typePoint}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="Chamonix" list="destination-list-${id}">
-                    <datalist id="destination-list-${id}">
-                      <option value="Amsterdam"></option>
-                      <option value="Geneva"></option>
-                      <option value="Chamonix"></option>
+                    <datalist id="destination-list-${id}">${createDestinationListTemplate()}
                     </datalist>
                   </div>
 
