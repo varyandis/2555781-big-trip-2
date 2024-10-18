@@ -7,7 +7,7 @@ import PointEditView from '../view/point-edit-view.js';
 
 
 export default class Board {
-  TaskListComponent = new EventsListView();
+  taskListComponent = new EventsListView();
 
   constructor({boardContainer, pointsModel}) {
     this.boardContainer = boardContainer;
@@ -23,13 +23,13 @@ export default class Board {
 
 
     render(new ListSortView(), this.boardContainer);
-    render(this.TaskListComponent, this.boardContainer);
+    render(this.taskListComponent, this.boardContainer);
     // render(new PointEditView(), this.TaskListComponent.getElement());
-    render(new PointEditView({point: this.boardPoints[0]}), this.TaskListComponent.getElement());
+    render(new PointEditView({point: this.boardPoints[0]}), this.taskListComponent.getElement());
     // render(new NewPointView(), this.TaskListComponent.getElement());
 
     for (let i = 0; i < this.boardPoints.length; i++) {
-      render(new EventsItemView({point: this.boardPoints[i]}), this.TaskListComponent.getElement());
+      render(new EventsItemView({point: this.boardPoints[i]}), this.taskListComponent.getElement());
     }
 
     // render(new EventsItemView(), this.TaskListComponent.getElement());

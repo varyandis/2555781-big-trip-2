@@ -13,5 +13,5 @@ render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
 render(new TripFiltersView(), siteMainFiltersElement , RenderPosition.AFTERBEGIN);
 
 const BoardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel});
-
+// console.log(pointsModel.getOffers())
 BoardPresenter.init();
