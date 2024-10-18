@@ -4,7 +4,7 @@ import { EVENT_TYPE } from '../const.js';
 import PointsModel from '../model/points-model.js';
 
 const pointsModel = new PointsModel();
-const destination = pointsModel.getDestination()
+const destinationList = pointsModel.getDestination();
 const createOffersTemplate = (offers, type) => {
 
   const listOffer = getListOffer(type).offers;
@@ -52,7 +52,7 @@ const createDestinationTemplate = (destination) => {
   );
 };
 
-const createDestinationListTemplate = () => destination.map(({name}) => `<option value="${name}"></option>`);
+const createDestinationListTemplate = () => destinationList.map(({name}) => `<option value="${name}"></option>`);
 
 const createEventTypeItem = (id) => EVENT_TYPE.map((type) => `<div class="event__type-item">
                           <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === 'flight') ? 'checked' : ''}>
