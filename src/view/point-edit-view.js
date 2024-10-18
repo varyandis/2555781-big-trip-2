@@ -2,6 +2,8 @@ import { createElement } from '../render.js';
 import { mockDestination } from '../mock/destination.js';
 import {humanizePointDueDateEdite, capitalizeFirstLetter, getListOffer, getListDestination, isTruthy} from '../utils.js';
 
+const pointsModel = new PointsModel();
+const destinationList = pointsModel.getDestination();
 const createOffersTemplate = (offers, type) => {
 
   const listOffer = getListOffer(type).offers;
@@ -49,7 +51,13 @@ const createDestinationTemplate = (destination) => {
   );
 };
 
-const createDestinationListTemplate = () => mockDestination.map(({name}) => `<option value="${name}"></option>`);
+const createDestinationListTemplate = () => destinationList.map(({name}) => `<option value="${name}"></option>`);
+
+const createEventTypeItem = (id) => EVENT_TYPE.map((type) => `<div class="event__type-item">
+                          <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === 'flight') ? 'checked' : ''}>
+                          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${capitalizeFirstLetter(type)}</label>
+                        </div> `).join('');
+
 
 const createPointEditTemplate = (point) => {
   const {basePrice, dateFrom, dateTo, destination, id, offers, type} = point;
