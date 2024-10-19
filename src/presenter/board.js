@@ -2,7 +2,7 @@ import { render } from '../framework/render.js';
 import EventsItemView from '../view/events-item-view.js';
 import ListSortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
-import PointEditView from '../view/point-edit-view.js';
+// import PointEditView from '../view/point-edit-view.js';
 // import NewPointView from '../view/point-new-view.js';
 
 
@@ -23,11 +23,17 @@ export default class Board {
 
     render(new ListSortView(), this.#boardContainer);
     render(this.#taskListComponent, this.#boardContainer);
-    render(new PointEditView({point: this.#boardPoints[0]}), this.#taskListComponent.element);
+    // render(new PointEditView({point: this.#boardPoints[0]}), this.#taskListComponent.element);
 
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      render(new EventsItemView({point: this.#boardPoints[i]}), this.#taskListComponent.element);
+      this.#renderPoint(this.#boardPoints[i]);
     }
 
+  }
+
+  #renderPoint(point) {
+    const pointComponent = new EventsItemView({point});
+
+    render(pointComponent, this.#taskListComponent.element);
   }
 }
