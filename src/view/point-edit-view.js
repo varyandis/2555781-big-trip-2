@@ -4,7 +4,7 @@ import PointsModel from '../model/points-model.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
 const pointsModel = new PointsModel();
-const destinationList = pointsModel.getDestination();
+const destinationList = pointsModel.destination;
 const createOffersTemplate = (offers, type) => {
 
   const listOffer = getListOffer(type).offers;

@@ -7,33 +7,27 @@ import PointEditView from '../view/point-edit-view.js';
 
 
 export default class Board {
-  taskListComponent = new EventsListView();
+  #boardContainer = null;
+  #pointsModel = null;
+
+  #taskListComponent = new EventsListView();
+  #boardPoints = [];
 
   constructor({boardContainer, pointsModel}) {
-    this.boardContainer = boardContainer;
-    this.pointsModel = pointsModel;
+    this.#boardContainer = boardContainer;
+    this.#pointsModel = pointsModel;
   }
 
   init() {
-    // console.log(this.pointsModel.getEvent())
-    // console.log(this.pointsModel.getPoint())
-    this.boardPoints = [...this.pointsModel.getPoint()];
-    // console.log(this.boardPoints)
-    // console.log(this.boardEvent)
+    this.#boardPoints = [...this.#pointsModel.point];
 
+    render(new ListSortView(), this.#boardContainer);
+    render(this.#taskListComponent, this.#boardContainer);
+    render(new PointEditView({point: this.#boardPoints[0]}), this.#taskListComponent.element);
 
-    render(new ListSortView(), this.boardContainer);
-    render(this.taskListComponent, this.boardContainer);
-    // render(new PointEditView(), this.TaskListComponent.getElement());
-    render(new PointEditView({point: this.boardPoints[0]}), this.taskListComponent.element);
-    // render(new NewPointView(), this.TaskListComponent.getElement());
-
-    for (let i = 0; i < this.boardPoints.length; i++) {
-      render(new EventsItemView({point: this.boardPoints[i]}), this.taskListComponent.element);
+    for (let i = 0; i < this.#boardPoints.length; i++) {
+      render(new EventsItemView({point: this.#boardPoints[i]}), this.#taskListComponent.element);
     }
 
-    // render(new EventsItemView(), this.TaskListComponent.getElement());
-    // render(new EventsItemView(), this.TaskListComponent.getElement());
-    // render(new EventsItemView(), this.TaskListComponent.getElement());
   }
 }

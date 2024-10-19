@@ -6,8 +6,8 @@ const TIME_FORMAT = 'HH:mm';
 const DATE_EVENTS_ITEM_FORMAT = 'MMM DD';
 
 const pointsModel = new PointsModel();
-const offers = pointsModel.getOffers();
-const destination = pointsModel.getDestination();
+const offers = pointsModel.offers;
+const destination = pointsModel.destination;
 
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
