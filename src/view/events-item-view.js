@@ -1,5 +1,5 @@
-import { createElement } from '../render.js';
 import { humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getDestinationName } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 const createSelectedOffersTemplate = (offers, type) => {
@@ -61,24 +61,15 @@ const createEventsItemTemplate = (point) => {
             </li>`);
 };
 
-export default class EventsItemView {
+export default class EventsItemView extends AbstractView {
+  #point = null;
+
   constructor({point}) {
-    this.point = point;
+    super();
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createEventsItemTemplate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createEventsItemTemplate(this.#point);
   }
 }

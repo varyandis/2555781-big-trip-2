@@ -1,7 +1,7 @@
-import { createElement } from '../render.js';
 import {humanizePointDueDateEdite, capitalizeFirstLetter, getListOffer, getListDestination, isTruthy} from '../utils.js';
 import { EVENT_TYPE } from '../const.js';
 import PointsModel from '../model/points-model.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const pointsModel = new PointsModel();
 const destinationList = pointsModel.getDestination();
@@ -126,24 +126,15 @@ const createPointEditTemplate = (point) => {
   );
 };
 
-export default class PointEditView {
+export default class PointEditView extends AbstractView {
+  #point = null;
+
   constructor({point}) {
+    super();
     this.point = point;
   }
 
-  getTemplate() {
+  get template() {
     return createPointEditTemplate(this.point);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

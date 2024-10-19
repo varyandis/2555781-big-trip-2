@@ -1,4 +1,5 @@
-import {render, RenderPosition} from './render.js';
+import {render, RenderPosition} from '../src/framework/render.js';
+// import {render, RenderPosition} from './render.js';
 import TripMainInfoView from './view/info-view.js';
 import TripFiltersView from './view/filters-view.js';
 import Board from './presenter/board.js';
