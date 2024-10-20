@@ -30,7 +30,7 @@ const createEventsItemTemplate = (point) => {
               <div class="event">
                 <time class="event__date" datetime="${dateFromHumanize}">${dateFromHumanize}</time>
                 <div class="event__type">
-                  <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+                  <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${typePoint} ${namePoint}</h3>
                 <div class="event__schedule">
@@ -63,13 +63,22 @@ const createEventsItemTemplate = (point) => {
 
 export default class EventsItemView extends AbstractView {
   #point = null;
+  #handleEditClick = null;
 
-  constructor({point}) {
+  constructor({point, onEditClick}) {
     super();
     this.#point = point;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
   }
 
   get template() {
     return createEventsItemTemplate(this.#point);
   }
+
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
