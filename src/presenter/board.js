@@ -21,7 +21,11 @@ export default class Board {
 
   init() {
     this.#boardPoints = [...this.#pointsModel.point];
+    this.#renderBoard();
+  }
 
+
+  #renderBoard() {
     render(new ListSortView(), this.#boardContainer);
     render(this.#taskListComponent, this.#boardContainer);
     // render(new PointEditView({point: this.#boardPoints[0]}), this.#taskListComponent.element);
@@ -29,7 +33,6 @@ export default class Board {
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i]);
     }
-
   }
 
   #renderPoint(point) {
