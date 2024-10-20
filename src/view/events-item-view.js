@@ -1,5 +1,8 @@
-import { humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getDestinationName } from '../utils.js';
+import { getListOffer, getDestinationName } from '../utils/point.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
+
+import { humanizePointDueTime, humanizePointDueDateItem} from '../utils/date.js';
 
 
 const createSelectedOffersTemplate = (offers, type) => {

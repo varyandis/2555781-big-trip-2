@@ -1,5 +1,4 @@
-import { getRandomArrayElement } from '../utils.js';
-// import { EVENTTYPE } from '../const.js';
+import { getRandomArrayElement } from '../utils/common.js';
 
 const mockPoints = [
   {

@@ -1,7 +1,11 @@
-import {humanizePointDueDateEdite, capitalizeFirstLetter, getListOffer, getListDestination, isTruthy} from '../utils.js';
+// import { getListOffer, getListDestination} from '../utils.js';
+import { getListOffer, getListDestination } from '../utils/point.js';
+import { isTruthy } from '../utils/common.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
 import PointsModel from '../model/points-model.js';
 import AbstractView from '../framework/view/abstract-view.js';
+import { humanizePointDueDateEdite } from '../utils/date.js';
 
 const pointsModel = new PointsModel();
 const destinationList = pointsModel.destination;
