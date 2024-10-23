@@ -1,9 +1,12 @@
-import { createElement } from '../render.js';
-import { humanizePointDueTime, humanizePointDueDateItem, capitalizeFirstLetter, getListOffer, getDestinationName } from '../utils.js';
+import { getListOffer, getDestinationName } from '../utils/point.js';
+import { capitalizeFirstLetter } from '../utils/common.js';
+import AbstractView from '../framework/view/abstract-view.js';
+
+import { humanizePointDueTime, humanizePointDueDateItem} from '../utils/date.js';
 
 
-const createSelectedOffersTemplate = (offers, type) => {
-  const listOffer = getListOffer(type).offers;
+const createSelectedOffersTemplate = (offers, type, offerList) => {
+  const listOffer = getListOffer(type, offerList);
   return listOffer.map(({id, title, price}) => `${(offers.includes(id)) ? `<ul class="event__selected-offers">
                   <li class="event__offer">
                     <span class="event__offer-title">${title}</span>
@@ -14,15 +17,14 @@ const createSelectedOffersTemplate = (offers, type) => {
   ).join('');
 };
 
-const createEventsItemTemplate = (point) => {
+const createEventsItemTemplate = (point, offerList, destinationList) => {
   const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
-
   const timeFromHumanize = humanizePointDueTime(dateFrom);
   const timeToHumanize = humanizePointDueTime(dateTo);
   const dateFromHumanize = humanizePointDueDateItem(dateFrom);
   const typePoint = capitalizeFirstLetter(type);
   const pointFavorite = isFavorite ? 'event__favorite-btn--active' : '';
-  const namePoint = getDestinationName(destination);
+  const namePoint = getDestinationName(destination, destinationList);
 
 
   return (
@@ -30,7 +32,7 @@ const createEventsItemTemplate = (point) => {
               <div class="event">
                 <time class="event__date" datetime="${dateFromHumanize}">${dateFromHumanize}</time>
                 <div class="event__type">
-                  <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
+                  <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${typePoint} ${namePoint}</h3>
                 <div class="event__schedule">
@@ -46,7 +48,7 @@ const createEventsItemTemplate = (point) => {
                 </p>
                 <h4 class="visually-hidden">Offers:</h4>
                 <ul class="event__selected-offers">
-                ${createSelectedOffersTemplate(offers, type)}
+                ${createSelectedOffersTemplate(offers, type, offerList)}
                 </ul>
                 <button class="event__favorite-btn ${pointFavorite}" type="button">
                   <span class="visually-hidden">Add to favorite</span>
@@ -61,24 +63,28 @@ const createEventsItemTemplate = (point) => {
             </li>`);
 };
 
-export default class EventsItemView {
-  constructor({point}) {
-    this.point = point;
+export default class EventsItemView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #handleEditClick = null;
+
+  constructor({point, offers, destination, onEditClick}) {
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#handleEditClick = onEditClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
   }
 
-  getTemplate() {
-    return createEventsItemTemplate(this.point);
+  get template() {
+    return createEventsItemTemplate(this.#point, this.#offers, this.#destination);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #editClickHandle = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

@@ -1,12 +1,11 @@
-import { getRandomArrayElement } from '../utils.js';
-// import { EVENTTYPE } from '../const.js';
+import { getRandomArrayElement } from '../utils/common.js';
 
 const mockPoints = [
   {
     id: 'f1',
     basePrice: 1100,
     dateFrom: '2019-06-10T23:55:56.845Z',
-    dateTo: '2019-07-11T23:23:13.375Z',
+    dateTo: '2031-07-11T23:23:13.375Z',
     destination: '1',
     isFavorite: true,
     offers: [
@@ -18,7 +17,7 @@ const mockPoints = [
     id: 'f2',
     basePrice: 800,
     dateFrom: '2018-05-10T19:55:56.845Z',
-    dateTo: '2018-05-11T11:19:13.375Z',
+    dateTo: '2031-05-11T11:19:13.375Z',
     destination: '2',
     isFavorite: true,
     offers: [
