@@ -1,18 +1,12 @@
-// import { getListOffer, getListDestination} from '../utils.js';
 import { getListOffer, getListDestination } from '../utils/point.js';
 import { isTruthy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
-import PointsModel from '../model/points-model.js';
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueDateEdite } from '../utils/date.js';
 
-const pointsModel = new PointsModel();
-const destinationList = pointsModel.destination;
-const createOffersTemplate = (offers, type) => {
-
-  const listOffer = getListOffer(type).offers;
-
+const createOffersTemplate = (offers, type, offerList) => {
+  const listOffer = getListOffer(type, offerList);
   if (isTruthy(listOffer)) {
     return '';
   }
@@ -33,12 +27,12 @@ const createOffersTemplate = (offers, type) => {
 };
 
 
-const createDestinationTemplate = (destination) => {
+const createDestinationTemplate = (destination, destinationList) => {
   if (isTruthy(destination)) {
     return '';
   }
 
-  const destinationPoint = getListDestination(destination);
+  const destinationPoint = getListDestination(destination, destinationList);
   const pictures = destinationPoint.pictures;
   return (
     `<section class="event__details">
@@ -56,7 +50,7 @@ const createDestinationTemplate = (destination) => {
   );
 };
 
-const createDestinationListTemplate = () => destinationList.map(({name}) => `<option value="${name}"></option>`);
+const createDestinationListTemplate = (destinationList) => destinationList.map(({name}) => `<option value="${name}"></option>`);
 
 const createEventTypeItem = (id) => EVENT_TYPE.map((type) => `<div class="event__type-item">
                           <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === 'flight') ? 'checked' : ''}>
@@ -64,7 +58,8 @@ const createEventTypeItem = (id) => EVENT_TYPE.map((type) => `<div class="event_
                         </div> `).join('');
 
 
-const createPointEditTemplate = (point) => {
+const createPointEditTemplate = (point, offerList, destinationList) => {
+
   const {basePrice, dateFrom, dateTo, destination, id, offers, type} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
@@ -95,7 +90,7 @@ const createPointEditTemplate = (point) => {
                       ${typePoint}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="Chamonix" list="destination-list-${id}">
-                    <datalist id="destination-list-${id}">${createDestinationListTemplate()}
+                    <datalist id="destination-list-${id}">${createDestinationListTemplate(destinationList)}
                     </datalist>
                   </div>
 
@@ -121,9 +116,9 @@ const createPointEditTemplate = (point) => {
                   </button>
                 </header>
 
-                    ${createOffersTemplate(offers, type)}
+                    ${createOffersTemplate(offers, type, offerList)}
 
-                  ${createDestinationTemplate(destination)}
+                  ${createDestinationTemplate(destination, destinationList)}
                 </section>
               </form>
               </li>`
@@ -132,11 +127,15 @@ const createPointEditTemplate = (point) => {
 
 export default class PointEditView extends AbstractView {
   #point = null;
+  #offers = null;
+  #destination = null;
   #handleFormSubmit = null;
 
-  constructor({point, onFormSubmit}) {
+  constructor({point, offers, destination, onFormSubmit}) {
     super();
-    this.point = point;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
     this.#handleFormSubmit = onFormSubmit;
 
     this.element.querySelector('form')
@@ -147,7 +146,7 @@ export default class PointEditView extends AbstractView {
   }
 
   get template() {
-    return createPointEditTemplate(this.point);
+    return createPointEditTemplate(this.#point, this.#offers, this.#destination);
   }
 
   #formSubmitHandler = (evt) => {

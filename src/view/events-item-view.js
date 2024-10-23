@@ -5,8 +5,8 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueTime, humanizePointDueDateItem} from '../utils/date.js';
 
 
-const createSelectedOffersTemplate = (offers, type) => {
-  const listOffer = getListOffer(type).offers;
+const createSelectedOffersTemplate = (offers, type, offerList) => {
+  const listOffer = getListOffer(type, offerList);
   return listOffer.map(({id, title, price}) => `${(offers.includes(id)) ? `<ul class="event__selected-offers">
                   <li class="event__offer">
                     <span class="event__offer-title">${title}</span>
@@ -17,15 +17,14 @@ const createSelectedOffersTemplate = (offers, type) => {
   ).join('');
 };
 
-const createEventsItemTemplate = (point) => {
+const createEventsItemTemplate = (point, offerList, destinationList) => {
   const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
-
   const timeFromHumanize = humanizePointDueTime(dateFrom);
   const timeToHumanize = humanizePointDueTime(dateTo);
   const dateFromHumanize = humanizePointDueDateItem(dateFrom);
   const typePoint = capitalizeFirstLetter(type);
   const pointFavorite = isFavorite ? 'event__favorite-btn--active' : '';
-  const namePoint = getDestinationName(destination);
+  const namePoint = getDestinationName(destination, destinationList);
 
 
   return (
@@ -49,7 +48,7 @@ const createEventsItemTemplate = (point) => {
                 </p>
                 <h4 class="visually-hidden">Offers:</h4>
                 <ul class="event__selected-offers">
-                ${createSelectedOffersTemplate(offers, type)}
+                ${createSelectedOffersTemplate(offers, type, offerList)}
                 </ul>
                 <button class="event__favorite-btn ${pointFavorite}" type="button">
                   <span class="visually-hidden">Add to favorite</span>
@@ -66,18 +65,22 @@ const createEventsItemTemplate = (point) => {
 
 export default class EventsItemView extends AbstractView {
   #point = null;
+  #offers = null;
+  #destination = null;
   #handleEditClick = null;
 
-  constructor({point, onEditClick}) {
+  constructor({point, offers, destination, onEditClick}) {
     super();
     this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
     this.#handleEditClick = onEditClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandle);
   }
 
   get template() {
-    return createEventsItemTemplate(this.#point);
+    return createEventsItemTemplate(this.#point, this.#offers, this.#destination);
   }
 
   #editClickHandle = (evt) => {

@@ -1,17 +1,10 @@
-import PointsModel from '../model/points-model';
 import dayjs from 'dayjs';
 
+const getListOffer = (typePoint, offers) => offers.find((item) => item.type === typePoint).offers;
 
-const pointsModel = new PointsModel();
-const offers = pointsModel.offers;
-const destination = pointsModel.destination;
+const getListDestination = (id, destinationList) => destinationList.find((item) => item.id === id);
 
-
-const getListOffer = (typePoint) => offers.find((item) => item.type === typePoint);
-
-const getListDestination = (id) => destination.find((item) => item.id === id);
-
-const getDestinationName = (destinationName) => destination.find((index) => index.id === destinationName).name;
+const getDestinationName = (destinationName, destinationList) => destinationList.find((index) => index.id === destinationName).name;
 
 const isPointFuture = (dateFrom) => dateFrom && dayjs().isBefore(dayjs(dateFrom));
 
@@ -23,6 +16,5 @@ const isPointPresent = (dateFrom, dateTo) => {
 const isPointPast = (dateTo) => dateTo && dayjs().isAfter(dateTo);
 
 
-export { getListOffer, getListDestination,getDestinationName, isPointFuture, isPointPresent, isPointPast
+export { getListOffer, getListDestination,getDestinationName, isPointFuture, isPointPresent, isPointPast};
 
-};

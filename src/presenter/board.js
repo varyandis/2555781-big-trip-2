@@ -4,9 +4,6 @@ import ListSortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import PointEditView from '../view/point-edit-view.js';
 import NoPointView from '../view/no-point-view.js';
-// import PointEditView from '../view/point-edit-view.js';
-// import NewPointView from '../view/point-new-view.js';
-
 
 export default class Board {
   #boardContainer = null;
@@ -14,6 +11,8 @@ export default class Board {
 
   #taskListComponent = new EventsListView();
   #boardPoints = [];
+  #boardOffers = [];
+  #boardDestination = [];
 
   constructor({boardContainer, pointsModel}) {
     this.#boardContainer = boardContainer;
@@ -22,6 +21,8 @@ export default class Board {
 
   init() {
     this.#boardPoints = [...this.#pointsModel.point];
+    this.#boardOffers = [...this.#pointsModel.offers];
+    this.#boardDestination = [...this.#pointsModel.destination];
     this.#renderBoard();
   }
 
@@ -33,14 +34,13 @@ export default class Board {
 
     render(new ListSortView(), this.#boardContainer);
     render(this.#taskListComponent, this.#boardContainer);
-    // render(new PointEditView({point: this.#boardPoints[0]}), this.#taskListComponent.element);
 
     for (let i = 0; i < this.#boardPoints.length; i++) {
-      this.#renderPoint(this.#boardPoints[i]);
+      this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestination);
     }
   }
 
-  #renderPoint(point) {
+  #renderPoint(point, offers, destination) {
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
@@ -49,12 +49,12 @@ export default class Board {
       }
     };
 
-    const pointComponent = new EventsItemView({point, onEditClick: () => {
+    const pointComponent = new EventsItemView({point, offers, destination, onEditClick: () => {
       replaceCardToForm();
       document.addEventListener('keydown', escKeyDownHandler);
     }});
 
-    const pointEditComponent = new PointEditView({point,
+    const pointEditComponent = new PointEditView({point, offers, destination,
       onFormSubmit: () => {
         replaceFormToCard();
         document.removeEventListener('keydown', escKeyDownHandler);
