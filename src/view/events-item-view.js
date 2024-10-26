@@ -18,6 +18,7 @@ const createSelectedOffersTemplate = (offers, type, offerList) => {
 
 const createEventsItemTemplate = (point, offerList, destinationList) => {
   const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
+
   const timeFromHumanize = humanizePointDueTime(dateFrom);
   const timeToHumanize = humanizePointDueTime(dateTo);
   const dateFromHumanize = humanizePointDueDateItem(dateFrom);
