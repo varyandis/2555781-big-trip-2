@@ -4,7 +4,6 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 import { humanizePointDueTime, humanizePointDueDateItem} from '../utils/date.js';
 
-
 const createSelectedOffersTemplate = (offers, type, offerList) => {
   const listOffer = getListOffer(type, offerList);
   return listOffer.map(({id, title, price}) => `${(offers.includes(id)) ? `<ul class="event__selected-offers">
