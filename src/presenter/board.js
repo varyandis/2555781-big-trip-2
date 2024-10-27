@@ -8,7 +8,7 @@ export default class Board {
   #boardContainer = null;
   #pointsModel = null;
 
-  #taskListComponent = new EventsListView();
+  #pointListComponent = new EventsListView();
   #sortComponent = new ListSortView();
   #noPointComponent = new NoPointView();
   #boardPoints = [];
@@ -37,7 +37,7 @@ export default class Board {
 
   #renderPointList() {
 
-    render(this.#taskListComponent, this.#boardContainer);
+    render(this.#pointListComponent, this.#boardContainer);
 
     for (let i = 0; i < this.#boardPoints.length; i++) {
       this.#renderPoint(this.#boardPoints[i], this.#boardOffers, this.#boardDestination);
@@ -55,7 +55,7 @@ export default class Board {
   }
 
   #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({taskListContainer: this.#taskListComponent.element});
+    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element});
     pointPresenter.init(point, offers, destination);
   }
 }
