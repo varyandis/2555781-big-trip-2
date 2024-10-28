@@ -6,4 +6,6 @@ const capitalizeFirstLetter = (word) => word.charAt(0).toUpperCase() + word.slic
 
 const isTruthy = (value) => value === null || value === '' || value.length === 0;
 
-export {getRandomArrayElement, capitalizeFirstLetter, isTruthy};
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+
+export {getRandomArrayElement, capitalizeFirstLetter, isTruthy, updateItem};
