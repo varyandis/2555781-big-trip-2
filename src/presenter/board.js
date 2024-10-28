@@ -29,10 +29,6 @@ export default class Board {
     this.#renderBoard();
   }
 
-  #handleTaskChange = (updatedPoint) => {
-    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
-  };
 
   #renderSort() {
     render(this.#sortComponent, this.#boardContainer);
@@ -62,7 +58,7 @@ export default class Board {
   }
 
   #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element});
+    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handlePointChange});
     pointPresenter.init(point, offers, destination);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
@@ -71,4 +67,10 @@ export default class Board {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#boardPoints = updateItem(this.#boardPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#boardOffers, this.#boardDestination);
+  };
+
 }
