@@ -10,7 +10,7 @@ export default class Board {
   #pointsModel = null;
 
   #pointListComponent = new EventsListView();
-  #sortComponent = new ListSortView();
+  #sortComponent = null;
   #noPointComponent = new NoPointView();
   #boardPoints = [];
   #boardOffers = [];
@@ -29,8 +29,18 @@ export default class Board {
     this.#renderBoard();
   }
 
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  };
+
 
   #renderSort() {
+    this.#sortComponent = new ListSortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
     render(this.#sortComponent, this.#boardContainer);
   }
 

@@ -14,7 +14,24 @@ ${createSortTemplate()}
 </form>`;
 
 export default class ListSortView extends AbstractView{
+  #handleSortTypeChange = null;
+
+  constructor({onSortTypeChange}) {
+    super();
+    this.#handleSortTypeChange = onSortTypeChange;
+
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+  }
+
   get template() {
     return createListSortTemplate();
   }
+
+  #sortTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    this.#handleSortTypeChange(evt.target.dataset.sortType);
+  };
 }
