@@ -1,4 +1,4 @@
-import { getListOffer, getDestinationName } from '../utils/point.js';
+import { getListOffer, getDestinationName, diffTime } from '../utils/point.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
@@ -41,7 +41,7 @@ const createEventsItemTemplate = (point, offerList, destinationList) => {
                     &mdash;
                     <time class="event__end-time" datetime="${timeToHumanize}">${timeToHumanize}</time>
                   </p>
-                  <p class="event__duration">30M</p>
+                  <p class="event__duration">${diffTime(dateFrom, dateTo)}</p>
                 </div>
                 <p class="event__price">
                   &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
