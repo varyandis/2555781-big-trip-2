@@ -131,6 +131,7 @@ export default class PointEditView extends AbstractStatefulView {
   #offers = null;
   #destination = null;
   #handleFormSubmit = null;
+  #initialPoint = null;
 
   constructor({point, offers, destination, onFormSubmit}) {
     super();
@@ -138,7 +139,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#offers = offers;
     this.#destination = destination;
     this.#handleFormSubmit = onFormSubmit;
-
+    this.#initialPoint = point;
     this._restoreHandlers();
   }
 
@@ -192,7 +193,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formEscHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destination));
+    this.#handleFormSubmit(PointEditView.parsePointToPoint(this.#initialPoint, this.#destination));
 
   };
 
@@ -218,4 +219,8 @@ export default class PointEditView extends AbstractStatefulView {
     return point;
   }
 
+  static parsePointToPoint(point) {
+    const initialPoint = point;
+    return initialPoint;
+  }
 }
