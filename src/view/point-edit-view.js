@@ -16,7 +16,7 @@ const createOffersTemplate = (offers, type, offerList) => {
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
                     <div class="event__available-offers">
-                    ${listOffer.map(({id, title, price}) => `<div class="event__offer-selector"><input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}" ${(offers.includes(id)) ? 'checked' : ''}>
+                    ${listOffer.map(({id, title, price}) => `<div class="event__offer-selector"><input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}" ${(offers.includes(id)) ? 'checked' : ''} data-selected-offers="${id}">
             <label class="event__offer-label" for="event-offer-${type}-${id}">
                 <span class="event__offer-title">${title}</span>
                 &plus;&euro;&nbsp;
@@ -147,11 +147,13 @@ export default class PointEditView extends AbstractStatefulView {
       .addEventListener('submit', this.#formSubmitHandler);
 
     this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#formSubmitHandler);
+      .addEventListener('click', this.#formEscHandler);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#selectedTypeHandler);
 
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#selectedDestinationHandler);
+
+    this.element.querySelector('.event__section--offers').addEventListener('change', this.#selectedOffersHandler);
   }
 
   get template() {
@@ -167,6 +169,16 @@ export default class PointEditView extends AbstractStatefulView {
     }
   };
 
+  #selectedOffersHandler = (evt) => {
+    const offerId = evt.target.dataset.selectedOffers;
+    const isSelected = evt.target.checked;
+    const updatedOffers = isSelected ? [...this._state.selectedOffers, offerId] : this._state.selectedOffers.filter((id) => id !== offerId);
+
+    this.updateElement({
+      selectedOffers: updatedOffers
+    });
+  };
+
   #selectedDestinationHandler = (evt) => {
     this.updateElement({
       selectedDestination: evt.target.value
@@ -175,7 +187,13 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(PointEditView.parsePointToState(this._state, this.#destination));
+    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destination));
+  };
+
+  #formEscHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destination));
+
   };
 
   static parsePointToState(point, destination) {
@@ -186,11 +204,16 @@ export default class PointEditView extends AbstractStatefulView {
     };
   }
 
-  static parseStateToPoint(state) {
+  static parseStateToPoint(state, destination) {
     const point = {...state};
 
-    // delete point.selectedType;
-    // delete task.isRepeating;
+    point.type = point.selectedType;
+    point.destination = getDestinationDescription(point.selectedDestination, destination).id;
+    point.offers = point.selectedOffers;
+
+    delete point.selectedType;
+    delete point.selectedOffers;
+    delete point.selectedDestination;
 
     return point;
   }
