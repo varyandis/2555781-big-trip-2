@@ -7,7 +7,9 @@ const getListOffer = (typePoint, offers) => offers.find((item) => item.type === 
 
 const getListDestination = (id, destinationList) => destinationList.find((item) => item.id === id);
 
-const getDestinationName = (destinationName, destinationList) => destinationList.find((index) => index.id === destinationName).name;
+const getDestinationName = (destinationId, destinationList) => destinationList.find((index) => index.id === destinationId).name;
+
+const getDestinationDescription = (destinationName, destinationList) => destinationList.find((index) => index.name === destinationName);
 
 const isPointFuture = (dateFrom) => dateFrom && dayjs().isBefore(dayjs(dateFrom));
 
@@ -49,5 +51,5 @@ const sortDate = (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom);
 const sortTime = (a, b) => new Date(a.dateFrom) - new Date(a.dateTo) - (new Date(b.dateFrom) - new Date(b.dateTo));
 
 
-export { getListOffer, getListDestination,getDestinationName, isPointFuture, isPointPresent, isPointPast, sortDay, diffTime, sortTime, sortDate};
+export { getListOffer, getListDestination,getDestinationName, getDestinationDescription, isPointFuture, isPointPresent, isPointPast, sortDay, diffTime, sortTime, sortDate};
 

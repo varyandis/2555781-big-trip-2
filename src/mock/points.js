@@ -21,7 +21,6 @@ const mockPoints = [
     destination: '2',
     isFavorite: true,
     offers: [
-      '31','32','33',
     ],
     type: 'bus'
   },
@@ -81,7 +80,7 @@ const mockPoints = [
     destination: '7',
     isFavorite: false,
     offers: [
-      '31','32','33',
+      '32','33',
     ],
     type: 'check-in'
   },
@@ -93,7 +92,7 @@ const mockPoints = [
     destination: '8',
     isFavorite: true,
     offers: [
-      '31','32','33',
+      '31', '33',
     ],
     type: 'sightseeing'
   },
