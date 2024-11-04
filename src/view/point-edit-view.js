@@ -4,6 +4,9 @@ import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateEdite } from '../utils/date.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createOffersTemplate = (offers, type, offerList) => {
   const listOffer = getListOffer(type, offerList);
