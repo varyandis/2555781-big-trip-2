@@ -135,6 +135,8 @@ export default class PointEditView extends AbstractStatefulView {
   #destination = null;
   #handleFormSubmit = null;
   #initialPoint = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({point, offers, destination, onFormSubmit}) {
     super();
@@ -145,6 +147,20 @@ export default class PointEditView extends AbstractStatefulView {
     this.#initialPoint = point;
     this._restoreHandlers();
   }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
 
   _restoreHandlers() {
     this.element.querySelector('form')
@@ -158,6 +174,8 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#selectedDestinationHandler);
 
     this.element.querySelector('.event__section--offers').addEventListener('change', this.#selectedOffersHandler);
+
+    this.#setDatepicker();
   }
 
   get template() {
@@ -189,6 +207,18 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
+  #dueDateChangeHandlerFrom = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dueDateChangeHandlerTo = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destination));
@@ -199,6 +229,32 @@ export default class PointEditView extends AbstractStatefulView {
     this.#handleFormSubmit(PointEditView.parsePointToPoint(this.#initialPoint, this.#destination));
 
   };
+
+  #setDatepicker() {
+
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('input[name="event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dueDateChangeHandlerFrom,
+      }
+    );
+
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('input[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        minDate: this._state.dateFrom,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dueDateChangeHandlerTo,
+      }
+    );
+  }
 
   static parsePointToState(point, destination) {
     return {...point,
