@@ -1,9 +1,12 @@
-import { getListOffer, getListDestination, getDestinationDescription } from '../utils/point.js';
+import { getListOffer, getListDestination, getDestinationDescription, getDestinationName } from '../utils/point.js';
 import { isTruthy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateEdite } from '../utils/date.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const createOffersTemplate = (offers, type, offerList) => {
   const listOffer = getListOffer(type, offerList);
@@ -11,10 +14,8 @@ const createOffersTemplate = (offers, type, offerList) => {
     return '';
   }
 
-  return `<section class="event__details">
-                  <section class="event__section  event__section--offers">
+  return `<section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
                     <div class="event__available-offers">
                     ${listOffer.map(({id, title, price}) => `<div class="event__offer-selector"><input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}" ${(offers.includes(id)) ? 'checked' : ''} data-selected-offers="${id}">
             <label class="event__offer-label" for="event-offer-${type}-${id}">
@@ -27,28 +28,25 @@ const createOffersTemplate = (offers, type, offerList) => {
 };
 
 
-const createDestinationTemplate = (destination, destinationList, selectedDestination) => {
+const createDestinationTemplate = (destination, destinationList) => {
   if (isTruthy(destination)) {
     return '';
   }
 
-  const destinationPoint = getDestinationDescription(selectedDestination, destinationList);
-  const descripton = destinationPoint.description;
+  const destinationPoint = getListDestination(destination, destinationList);
   const pictures = destinationPoint.pictures;
 
   return (
-    `<section class="event__details">
-      <section class="event__section  event__section--destination">
+    `<section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${descripton}</p>
+        <p class="event__destination-description">${destinationPoint.description}</p>
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
             ${pictures.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
           </div>
         </div>
-      </section>
-    </section>`
+      </section>`
   );
 };
 
@@ -61,10 +59,9 @@ const createEventTypeItem = (id, typePoint) => EVENT_TYPE.map((type) => `<div cl
 
 
 const createPointEditTemplate = (point, offerList, destinationList) => {
-  const {basePrice, dateFrom, dateTo, destination, id, selectedType, selectedOffers, selectedDestination} = point;
+  const {basePrice, dateFrom, dateTo, destination, id, type, offers} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
-
 
   return (
     `<li class="trip-events__item">
@@ -73,7 +70,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                   <div class="event__type-wrapper">
                     <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
                       <span class="visually-hidden">Choose event type</span>
-                      <img class="event__type-icon" width="17" height="17" src="img/icons/${selectedType}.png" alt="Event type icon">
+                      <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
                     </label>
                     <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
@@ -81,7 +78,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                       <fieldset class="event__type-group">
                         <legend class="visually-hidden">Event type</legend>
 
-                        ${createEventTypeItem(id, selectedType)}
+                        ${createEventTypeItem(id, type)}
 
                       </fieldset>
                     </div>
@@ -89,9 +86,9 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
 
                   <div class="event__field-group  event__field-group--destination">
                     <label class="event__label  event__type-output" for="event-destination-${id}">
-                      ${selectedType}
+                      ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${selectedDestination}" list="destination-list-${id}">
+                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${getDestinationName(destination, destinationList)}" list="destination-list-${id}">
                     <datalist id="destination-list-${id}">${createDestinationListTemplate(destinationList)}
                     </datalist>
                   </div>
@@ -117,10 +114,10 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                     <span class="visually-hidden">Open event</span>
                   </button>
                 </header>
+                <section class="event__details">
+                  ${createOffersTemplate(offers, type, offerList)}
 
-                    ${createOffersTemplate(selectedOffers, selectedType, offerList)}
-
-                  ${createDestinationTemplate(destination, destinationList, selectedDestination)}
+                  ${createDestinationTemplate(destination, destinationList)}
                 </section>
               </form>
               </li>`
@@ -132,6 +129,8 @@ export default class PointEditView extends AbstractStatefulView {
   #destination = null;
   #handleFormSubmit = null;
   #initialPoint = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({point, offers, destination, onFormSubmit}) {
     super();
@@ -142,6 +141,20 @@ export default class PointEditView extends AbstractStatefulView {
     this.#initialPoint = point;
     this._restoreHandlers();
   }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  }
+
 
   _restoreHandlers() {
     this.element.querySelector('form')
@@ -155,6 +168,8 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#selectedDestinationHandler);
 
     this.element.querySelector('.event__section--offers').addEventListener('change', this.#selectedOffersHandler);
+
+    this.#setDatepicker();
   }
 
   get template() {
@@ -164,8 +179,8 @@ export default class PointEditView extends AbstractStatefulView {
   #selectedTypeHandler = (evt) => {
     if (evt.target.classList.contains('event__type-input')) {
       this.updateElement({
-        selectedType: evt.target.value,
-        selectedOffers: []
+        type: evt.target.value,
+        offers: []
       });
     }
   };
@@ -173,16 +188,29 @@ export default class PointEditView extends AbstractStatefulView {
   #selectedOffersHandler = (evt) => {
     const offerId = evt.target.dataset.selectedOffers;
     const isSelected = evt.target.checked;
-    const updatedOffers = isSelected ? [...this._state.selectedOffers, offerId] : this._state.selectedOffers.filter((id) => id !== offerId);
 
     this.updateElement({
-      selectedOffers: updatedOffers
+      offers: isSelected ? [...this._state.offers, offerId] : this._state.offers.filter((id) => id !== offerId)
     });
   };
 
   #selectedDestinationHandler = (evt) => {
+    const selectedDestination = evt.target.value;
+
     this.updateElement({
-      selectedDestination: evt.target.value
+      destination: getDestinationDescription(selectedDestination, this.#destination).id,
+    });
+  };
+
+  #dueDateChangeHandlerFrom = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dueDateChangeHandlerTo = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
     });
   };
 
@@ -193,34 +221,47 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formEscHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(PointEditView.parsePointToPoint(this.#initialPoint, this.#destination));
+    this.#handleFormSubmit(this.#initialPoint, this.#destination);
 
   };
 
-  static parsePointToState(point, destination) {
+  #setDatepicker() {
+
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('input[name="event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        maxDate: this._state.dateTo,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dueDateChangeHandlerFrom,
+      }
+    );
+
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('input[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        minDate: this._state.dateFrom,
+        defaultDate: this._state.dateTo,
+        onChange: this.#dueDateChangeHandlerTo,
+      }
+    );
+  }
+
+  static parsePointToState(point) {
     return {...point,
-      selectedType: point.type,
-      selectedOffers: point.offers,
-      selectedDestination: getListDestination(point.destination, destination).name
     };
   }
 
-  static parseStateToPoint(state, destination) {
+  static parseStateToPoint(state) {
     const point = {...state};
-
-    point.type = point.selectedType;
-    point.destination = getDestinationDescription(point.selectedDestination, destination).id;
-    point.offers = point.selectedOffers;
-
-    delete point.selectedType;
-    delete point.selectedOffers;
-    delete point.selectedDestination;
 
     return point;
   }
 
-  static parsePointToPoint(point) {
-    const initialPoint = point;
-    return initialPoint;
-  }
+
 }
