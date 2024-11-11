@@ -26,6 +26,18 @@ export default class Board {
     this.#pointsModel = pointsModel;
   }
 
+  get point() {
+    return this.#pointsModel.point;
+  }
+
+  get offers() {
+    return this.#pointsModel.offers;
+  }
+
+  get destination() {
+    return this.#pointsModel.destination;
+  }
+
   init() {
     this.#boardPoints = [...this.#pointsModel.point];
     this.#boardOffers = [...this.#pointsModel.offers];
