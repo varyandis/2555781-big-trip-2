@@ -3,7 +3,6 @@ import ListSortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoPointView from '../view/no-point-view.js';
 import PointPresenter from './point.js';
-// import { updateItem } from '../utils/common.js';
 import { SortType } from '../const.js';
 import { sortDay, sortTime, sortDate } from '../utils/point.js';
 
@@ -20,6 +19,7 @@ export default class Board {
   constructor({boardContainer, pointsModel}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
+    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -86,7 +86,7 @@ export default class Board {
   }
 
   #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handlePointChange, onModeChange: this.#handleModeChange});
+    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handleViewAction, onModeChange: this.#handleModeChange});
     pointPresenter.init(point, offers, destination);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
@@ -96,9 +96,20 @@ export default class Board {
     this.#pointPresenter.clear();
   }
 
-  #handlePointChange = (updatedPoint) => {
-    // Здесь будем вызывать обновление модели
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.offers, this.destination);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   };
 
   #handleModeChange = () => {
