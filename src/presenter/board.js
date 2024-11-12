@@ -1,4 +1,4 @@
-import { render} from '../framework/render.js';
+import { remove, render} from '../framework/render.js';
 import ListSortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoPointView from '../view/no-point-view.js';
@@ -50,8 +50,8 @@ export default class Board {
     }
 
     this.#currentSortType = sortType;
-    this.#clearPointList();
-    this.#renderPointList();
+    this.#clearBoard();
+    this.#renderBoard();
   };
 
 
@@ -111,17 +111,17 @@ export default class Board {
   };
 
   #handleModelEvent = (updateType, data) => {
-    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#pointPresenter.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
+        this.#clearBoard();
+        this.#renderBoard();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
+        this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
         break;
     }
   };
@@ -129,4 +129,16 @@ export default class Board {
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
+
+  #clearBoard({resetSortType = false} = {}) {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noPointComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DEFAULT;
+    }
+  }
 }
