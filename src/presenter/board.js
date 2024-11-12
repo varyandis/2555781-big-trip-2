@@ -57,6 +57,7 @@ export default class Board {
 
   #renderSort() {
     this.#sortComponent = new ListSortView({
+      currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange
     });
 
@@ -89,11 +90,6 @@ export default class Board {
     const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handleViewAction, onModeChange: this.#handleModeChange});
     pointPresenter.init(point, offers, destination);
     this.#pointPresenter.set(point.id, pointPresenter);
-  }
-
-  #clearPointList() {
-    this.#pointPresenter.forEach((presenter) => presenter.destroy());
-    this.#pointPresenter.clear();
   }
 
   #handleViewAction = (actionType, updateType, update) => {
