@@ -12,19 +12,14 @@ const siteMainFiltersElement = document.querySelector('.trip-controls__filters')
 const siteMainInfoElement = document.querySelector('.trip-main');
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
-const BoardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel});
+const BoardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel, filterModel});
 const filterPresenter = new FilterPresenter({
   filterContainer: siteMainFiltersElement,
   filterModel,
   pointsModel
 });
-// const filters = generateFilter(pointsModel.point);
 
 render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
-// render(new TripFiltersView({filters,
-//   currentFilterType: 'aleverythingl',
-//   onFilterTypeChange: () => {}}), siteMainFiltersElement , RenderPosition.AFTERBEGIN);
-
 
 filterPresenter.init();
 BoardPresenter.init();
