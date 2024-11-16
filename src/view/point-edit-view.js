@@ -169,7 +169,7 @@ export default class PointEditView extends AbstractStatefulView {
 
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#selectedDestinationHandler);
 
-    this.element.querySelector('.event__section--offers').addEventListener('change', this.#selectedOffersHandler);
+    this.element.querySelector('.event__section--offers')?.addEventListener('change', this.#selectedOffersHandler);
 
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
