@@ -92,7 +92,7 @@ export default class Board {
 
   #renderBoard() {
     if (this.points.length === 0) {
-      this.#renderNoPoint();
+      return this.#renderNoPoint();
     }
     this.points.sort(sortDate);
     this.#renderSort();
@@ -142,16 +142,16 @@ export default class Board {
   #clearBoard({resetSortType = false} = {}) {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
-
+console.log(1)
     remove(this.#sortComponent);
-    remove(this.#noPointComponent);
-
-    if (this.#noPointComponent) {
-      remove(this.#noPointComponent);
-    }
+    // remove(this.#noPointComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
+    }
+
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
     }
   }
 }
