@@ -41,9 +41,8 @@ function handleNewPointButtonClick() {
   newPointButtonComponent.element.disabled = true;
 }
 
-render(newPointButtonComponent, siteMainInfoElement);
-
-
 filterPresenter.init();
 boardPresenter.init();
-pointsModel.init();
+pointsModel.init().finally(() => {
+  render(newPointButtonComponent, siteMainInfoElement);
+});
