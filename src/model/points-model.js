@@ -6,8 +6,24 @@ import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
   #points = Array.from({length: POINTS_COUNT}, getRandomPoint);
+  #tripApiService = null;
   #offers = mockOffers;
   #destinations = mockDestination;
+
+  constructor({tripApiService}) {
+    super();
+    // console.log(pointsApiService)
+    this.#tripApiService = tripApiService;
+
+    this.#tripApiService.points.then((point) => {
+      console.log(point);
+      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+      // а ещё на сервере используется snake_case, а у нас camelCase.
+      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+      // Есть вариант получше - паттерн "Адаптер"
+    });
+  }
+
 
   get point() {
     return this.#points;

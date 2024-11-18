@@ -7,11 +7,17 @@ import Board from './presenter/board.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import NewPointButtonView from './view/new-point-button-view.js';
+import PointsApiService from './points-api-service.js';
 
+const AUTHORIZATION = `Basic ${Math.random().toString(16).slice(2)}`;
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+const pointsModel = new PointsModel({
+  tripApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
 const siteMainSortElement = document.querySelector('.trip-events');
 const siteMainFiltersElement = document.querySelector('.trip-controls__filters');
 const siteMainInfoElement = document.querySelector('.trip-main');
-const pointsModel = new PointsModel();
+// const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 const boardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel, filterModel, onNewPointDestroy: handleNewPointFormClose});
 const filterPresenter = new FilterPresenter({
