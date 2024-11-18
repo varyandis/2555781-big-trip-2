@@ -1,3 +1,4 @@
+import he from 'he';
 import { getListOffer, getListDestination, getDestinationDescription, getDestinationName } from '../utils/point.js';
 import { isTruthy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
@@ -54,7 +55,7 @@ const createDestinationListTemplate = (destinationList) => destinationList.map((
 
 const createEventTypeItem = (id, typePoint) => EVENT_TYPE.map((type) => `<div class="event__type-item">
                           <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === typePoint) ? 'checked' : ''}>
-                          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${capitalizeFirstLetter(type)}</label>
+                          <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${he.encode(capitalizeFirstLetter(type))}</label>
                         </div> `).join('');
 
 
@@ -106,7 +107,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+                    <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" type="number">
                   </div>
                   <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
                   <button class="event__reset-btn" type="reset">Delete</button>
@@ -173,6 +174,8 @@ export default class PointEditView extends AbstractStatefulView {
 
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
 
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+
     this.#setDatepicker();
   }
 
@@ -185,6 +188,15 @@ export default class PointEditView extends AbstractStatefulView {
       this.updateElement({
         type: evt.target.value,
         offers: []
+      });
+    }
+  };
+
+  #priceChangeHandler = (evt) => {
+    const price = Number(evt.target.value);
+    if (!isNaN(price) && price >= 0) {
+      this._setState({
+        basePrice: price
       });
     }
   };

@@ -4,6 +4,7 @@ import {UserAction, UpdateType} from '../const.js';
 import NewPointView from '../view/point-new-view.js';
 
 const BLANK_POINT = {
+  id: '',
   basePrice: 1100,
   dateFrom: '',
   dateTo: '',
