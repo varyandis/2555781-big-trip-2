@@ -16,7 +16,7 @@ export default class PointsModel extends Observable {
     this.#tripApiService = tripApiService;
 
     this.#tripApiService.points.then((point) => {
-      console.log(point);
+      console.log(point.map(this.#adaptPointToClient));
       // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
       // а ещё на сервере используется snake_case, а у нас camelCase.
       // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
@@ -24,6 +24,21 @@ export default class PointsModel extends Observable {
     });
   }
 
+  #adaptPointToClient(point) {
+    const adaptedPoint = {...point,
+      basePrice: point['base_price'],
+      dateFrom: point['date_from'],
+      dateTo: point['date_to'],
+      isFavorite: point['is_favorite'],
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+    delete adaptedPoint['is_favorite'];
+
+    return adaptedPoint;
+  }
 
   get point() {
     return this.#points;
