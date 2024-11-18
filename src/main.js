@@ -46,3 +46,4 @@ render(newPointButtonComponent, siteMainInfoElement);
 
 filterPresenter.init();
 boardPresenter.init();
+pointsModel.init();

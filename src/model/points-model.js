@@ -1,30 +1,38 @@
-import { getRandomPoint } from '../mock/points.js';
-import { mockOffers } from '../mock/offers.js';
-import { mockDestination } from '../mock/destination.js';
-import { POINTS_COUNT } from '../const.js';
 import Observable from '../framework/observable.js';
 
 export default class PointsModel extends Observable {
-  #points = Array.from({length: POINTS_COUNT}, getRandomPoint);
+  #points = [];
   #tripApiService = null;
-  #offers = mockOffers;
-  #destinations = mockDestination;
+  #offers = [];
+  #destinations = [];
 
   constructor({tripApiService}) {
     super();
-    // console.log(pointsApiService)
     this.#tripApiService = tripApiService;
-
-    this.#tripApiService.points.then((point) => {
-      console.log(point.map(this.#adaptPointToClient));
-      // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
-      // а ещё на сервере используется snake_case, а у нас camelCase.
-      // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
-      // Есть вариант получше - паттерн "Адаптер"
-    });
   }
 
-  #adaptPointToClient(point) {
+  async init() {
+    try {
+      const points = await this.#tripApiService.points;
+      this.#points = points.map(this.#adaptToClient);
+    } catch(err) {
+      this.#points = [];
+    }
+
+    try {
+      this.#destinations = await this.#tripApiService.destinations;
+    } catch(err) {
+      this.#destinations = [];
+    }
+
+    try {
+      this.#offers = await this.#tripApiService.offers;
+    } catch(err) {
+      this.#offers = [];
+    }
+  }
+
+  #adaptToClient(point) {
     const adaptedPoint = {...point,
       basePrice: point['base_price'],
       dateFrom: point['date_from'],
