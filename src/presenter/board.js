@@ -6,6 +6,7 @@ import PointPresenter from './point.js';
 import { SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import { sortDay, sortTime, sortDate } from '../utils/point.js';
 import {filter} from '../utils/filter.js';
+import NewPointPresenter from './new-point.js';
 export default class Board {
   #boardContainer = null;
   #pointsModel = null;
@@ -15,15 +16,22 @@ export default class Board {
   #sortComponent = null;
   #noPointComponent = null;
   #pointPresenter = new Map();
+  #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
-  constructor({boardContainer, pointsModel, filterModel}) {
+  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
+
+    this.#newPointPresenter = new NewPointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewPointDestroy
+    });
 
   }
 
@@ -51,6 +59,13 @@ export default class Board {
 
   init() {
     this.#renderBoard();
+  }
+
+  createPoint() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newPointPresenter.init(this.offers, this.destination);
+
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -136,15 +151,17 @@ export default class Board {
   };
 
   #handleModeChange = () => {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
 
   #clearBoard({resetSortType = false} = {}) {
+    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
-console.log(1)
+
+
     remove(this.#sortComponent);
-    // remove(this.#noPointComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;

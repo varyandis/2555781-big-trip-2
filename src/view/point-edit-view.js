@@ -193,7 +193,7 @@ export default class PointEditView extends AbstractStatefulView {
     const offerId = evt.target.dataset.selectedOffers;
     const isSelected = evt.target.checked;
 
-    this.updateElement({
+    this._setState({
       offers: isSelected ? [...this._state.offers, offerId] : this._state.offers.filter((id) => id !== offerId)
     });
   };
@@ -207,15 +207,17 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #dueDateChangeHandlerFrom = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       dateFrom: userDate,
     });
+    this.#datepickerTo.set('minDate');
   };
 
   #dueDateChangeHandlerTo = ([userDate]) => {
-    this.updateElement({
+    this._setState({
       dateTo: userDate,
     });
+    this.#datepickerFrom.set('maxDate');
   };
 
   #formSubmitHandler = (evt) => {
@@ -268,9 +270,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   static parseStateToPoint(state) {
     const point = {...state};
-
     return point;
   }
-
 
 }
