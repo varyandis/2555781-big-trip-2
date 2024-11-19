@@ -49,7 +49,8 @@ export default class PointPresenter {
       offers: this.#offers,
       destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      onCloseButtonClick: this.#handleCloseButtonClick
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -88,6 +89,11 @@ export default class PointPresenter {
     }
   };
 
+  #handleCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#replaceFormToCard();
+  };
+
   #replaceCardToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -111,7 +117,6 @@ export default class PointPresenter {
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       point);
-    // this.#replaceFormToCard();
   };
 
   #handleFavoriteClick = () => {
@@ -136,6 +141,7 @@ export default class PointPresenter {
         isSaving: true,
       });
     }
+
   }
 
   setDeleting() {

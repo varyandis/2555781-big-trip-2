@@ -1,18 +1,7 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
-
-import NewPointView from '../view/point-new-view.js';
-
-const BLANK_POINT = {
-
-  basePrice: '',
-  dateFrom: '',
-  dateTo: '',
-  destination: '',
-  isFavorite: false,
-  offers: [],
-  type: 'flight'
-};
+import PointEditView from '../view/point-edit-view.js';
+// import NewPointView from '../view/point-new-view.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
@@ -31,7 +20,7 @@ export default class NewPointPresenter {
     this.#handleDestroy = onDestroy;
   }
 
-  init(offers, destination, point = BLANK_POINT) {
+  init(offers, destination, point) {
     if (this.#pointEditComponent !== null) {
       return;
     }
@@ -39,12 +28,12 @@ export default class NewPointPresenter {
     this.#offers = offers;
     this.#destination = destination;
 
-    this.#pointEditComponent = new NewPointView({
+    this.#pointEditComponent = new PointEditView({
       point: this.#point,
       offers: this.#offers,
       destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
