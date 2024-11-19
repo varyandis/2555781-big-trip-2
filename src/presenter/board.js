@@ -7,18 +7,22 @@ import { SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import { sortDay, sortTime, sortDate } from '../utils/point.js';
 import {filter} from '../utils/filter.js';
 import NewPointPresenter from './new-point.js';
+import LoadingView from '../view/loading-view.js';
+
 export default class Board {
   #boardContainer = null;
   #pointsModel = null;
   #filterModel = null;
 
   #pointListComponent = new EventsListView();
+  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #noPointComponent = null;
   #pointPresenter = new Map();
   #newPointPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
   constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
@@ -106,9 +110,15 @@ export default class Board {
   }
 
   #renderBoard() {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
+
     if (this.points.length === 0) {
       return this.#renderNoPoint();
     }
+
     this.points.sort(sortDate);
     this.#renderSort();
     this.#renderPointList();
@@ -147,8 +157,17 @@ export default class Board {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderBoard();
+        break;
     }
   };
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#boardContainer);
+  }
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
@@ -162,6 +181,7 @@ export default class Board {
 
 
     remove(this.#sortComponent);
+    remove(this.#loadingComponent);
 
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
