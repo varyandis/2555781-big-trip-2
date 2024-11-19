@@ -27,7 +27,7 @@ export default class PointsApiService extends ApiService {
     const response = await this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(point),
+      body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
     const parsedResponse = await ApiService.parseResponse(response);
@@ -38,7 +38,7 @@ export default class PointsApiService extends ApiService {
     const response = await this._load({
       url: 'points',
       method: Method.POST,
-      body: JSON.stringify(point),
+      body: JSON.stringify(this.#adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
     const parsedResponse = await ApiService.parseResponse(response);
@@ -52,7 +52,7 @@ export default class PointsApiService extends ApiService {
     });
   }
 
-  #adaptPointToServer(point) {
+  #adaptToServer(point) {
     const adaptedPoint = {...point,
       'base_price': point.basePrice,
       'date_from': point.dateFrom,

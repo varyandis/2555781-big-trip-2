@@ -89,7 +89,7 @@ const createNewPointTemplate = (point, offerList, destinationList) => {
                     <label class="event__label  event__type-output" for="event-destination-${id}">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${getDestinationName(destination, destinationList)}" list="destination-list-${id}">
+                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationName(destination, destinationList)}" list="destination-list-${id}">
                     <datalist id="destination-list-${id}">${createDestinationListTemplate(destinationList)}
                     </datalist>
                   </div>
@@ -107,7 +107,7 @@ const createNewPointTemplate = (point, offerList, destinationList) => {
                       <span class="visually-hidden">Price</span>
                       &euro;
                     </label>
-                    <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" type="number">
+                    <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${(!basePrice) ? '' : basePrice}" type="number">
                   </div>
                    <button class="event__save-btn  btn  btn--blue" type="submit">Save</button><button class="event__reset-btn" type="reset">Cancel</button>
                 </header>
@@ -197,7 +197,7 @@ export default class NewPointView extends AbstractStatefulView {
     const price = Number(evt.target.value);
     if (!isNaN(price) && price >= 0) {
       this._setState({
-        basePrice: price
+        basePrice: Number(price)
       });
     }
   };

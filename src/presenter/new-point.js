@@ -4,15 +4,13 @@ import {UserAction, UpdateType} from '../const.js';
 import NewPointView from '../view/point-new-view.js';
 
 const BLANK_POINT = {
-  id: '',
-  basePrice: 1100,
+
+  basePrice: '',
   dateFrom: '',
   dateTo: '',
-  destination: '1',
+  destination: '',
   isFavorite: false,
-  offers: [
-    '31','32','33',
-  ],
+  offers: [],
   type: 'flight'
 };
 
@@ -68,10 +66,7 @@ export default class NewPointPresenter {
   }
 
   #handleFormSubmit = (point) => {
-    const generatedId = Math.random().toString(16).slice(2);
-    const newPoint = {id: generatedId, ...point};
-
-    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
+    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
     this.destroy();
   };
 
