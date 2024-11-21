@@ -211,7 +211,8 @@ export default class Board {
     remove(this.#loadingComponent);
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
+      this.#currentSortType = SortType.DAY;
+      this.#pointsModel.point.sort(sortDate);
     }
 
     if (this.#noPointComponent) {
