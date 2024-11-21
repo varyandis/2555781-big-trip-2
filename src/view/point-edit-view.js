@@ -45,10 +45,10 @@ const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 };
 
 
-const createDestinationTemplate = (destination, destinationList, id) => {
+const createDestinationTemplate = (destination, destinationList) => {
   const destinationPoint = getListDestination(destination, destinationList);
 
-  if (isTruthy(destination) || !destinationPoint.description || !id) {
+  if (isTruthy(destination) || !destinationPoint.description) {
     return '';
   }
 
@@ -141,7 +141,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                 <section class="event__details">
                   ${createOffersTemplate(offers, type, offerList, isDisabled)}
 
-                  ${createDestinationTemplate(destination, destinationList, id)}
+                  ${createDestinationTemplate(destination, destinationList)}
                 </section>
               </form>
               </li>`

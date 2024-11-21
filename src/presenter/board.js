@@ -45,7 +45,9 @@ export default class Board {
     this.#newPointPresenter = new NewPointPresenter({
       pointListContainer: this.#pointListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy
+      onDestroy: onNewPointDestroy,
+      pointsModel: this.#pointsModel,
+      boardContainer: this.#boardContainer
     });
 
   }
@@ -79,7 +81,13 @@ export default class Board {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.offers, this.destination);
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      this.#newPointPresenter.init(this.offers, this.destination);
+    } else {
+      this.#newPointPresenter.init(this.offers, this.destination);
+    }
+    // this.#newPointPresenter.init(this.offers, this.destination);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -206,7 +214,6 @@ export default class Board {
     this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
-
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
