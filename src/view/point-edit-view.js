@@ -1,5 +1,5 @@
 import he from 'he';
-import { getListOffer, getListDestination, getDestinationDescription, getDestinationName } from '../utils/point.js';
+import { getListOffer, getListDestination, getDestinationName } from '../utils/point.js';
 import { isTruthy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
@@ -75,14 +75,14 @@ const createEventTypeItem = (id, typePoint, isDisabled) => EVENT_TYPE.map((type)
                           <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${he.encode(capitalizeFirstLetter(type))}</label>
                         </div> `).join('');
 
-const createResetButton = (isNew, isDeleting) => {
-  if (isNew) {
+const createResetButton = (id, isDeleting) => {
+  if (!id) {
     return (`<button class="event__reset-btn" type="reset">${ResetButtonTitle.CANCEL}</button>`);
   }
   return `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`;
 };
 
-const createPointEditTemplate = (point, offerList, destinationList, isNew) => {
+const createPointEditTemplate = (point, offerList, destinationList) => {
   const {basePrice, dateFrom, dateTo, destination, id, type, offers, isDisabled, isSaving, isDeleting} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
@@ -133,10 +133,10 @@ const createPointEditTemplate = (point, offerList, destinationList, isNew) => {
                     <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" type="number" ${isDisabled ? 'disabled' : ''}>
                   </div>
                   <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-                  ${createResetButton(isNew, isDeleting)}
-                  <button class="event__rollup-btn" type="button">
+                  ${createResetButton(id, isDeleting)}
+                  ${(point.id) ? (`<button class="event__rollup-btn" type="button">
                     <span class="visually-hidden">Open event</span>
-                  </button>
+                  </button>`) : ''}
                 </header>
                 <section class="event__details">
                   ${createOffersTemplate(offers, type, offerList, isDisabled)}
@@ -191,11 +191,12 @@ export default class PointEditView extends AbstractStatefulView {
       .addEventListener('submit', this.#formSubmitHandler);
 
     this.element.querySelector('.event__rollup-btn')
-      .addEventListener('click', this.#handleCloseButtonClick);
+      ?.addEventListener('click', this.#handleCloseButtonClick);
 
     this.element.querySelector('.event__type-group').addEventListener('click', this.#selectedTypeHandler);
 
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#selectedDestinationHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#selectedDestinationHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('blur', this.#destinationBlurHandler);
 
     this.element.querySelector('.event__section--offers')?.addEventListener('change', this.#selectedOffersHandler);
 
@@ -223,8 +224,10 @@ export default class PointEditView extends AbstractStatefulView {
     const price = Number(evt.target.value);
     if (!isNaN(price) && price >= 0) {
       this._setState({
-        basePrice: Number(price)
+        basePrice: price
       });
+    } else {
+      evt.target.value = this._state.basePrice;
     }
   };
 
@@ -237,12 +240,21 @@ export default class PointEditView extends AbstractStatefulView {
     });
   };
 
-  #selectedDestinationHandler = (evt) => {
-    const selectedDestination = evt.target.value;
+  #destinationBlurHandler = (evt) => {
+    const currentDestination = this.#destination.find((destination) => destination.id === this._state.destination);
+    if (currentDestination) {
+      evt.target.value = currentDestination.name;
+    }
 
-    this.updateElement({
-      destination: getDestinationDescription(selectedDestination, this.#destination).id,
-    });
+  };
+
+  #selectedDestinationHandler = (evt) => {
+    const nextDestination = this.#destination.find((destination) => destination.name === evt.target.value);
+    if (nextDestination) {
+      this.updateElement({
+        destination: nextDestination.id,
+      });
+    }
   };
 
   #dueDateChangeHandlerFrom = ([userDate]) => {
