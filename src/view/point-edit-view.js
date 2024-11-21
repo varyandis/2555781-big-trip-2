@@ -45,24 +45,25 @@ const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 };
 
 
-const createDestinationTemplate = (destination, destinationList) => {
-  if (isTruthy(destination)) {
+const createDestinationTemplate = (destination, destinationList, id) => {
+  const destinationPoint = getListDestination(destination, destinationList);
+
+  if (isTruthy(destination) || !destinationPoint.description || !id) {
     return '';
   }
 
-  const destinationPoint = getListDestination(destination, destinationList);
   const pictures = destinationPoint.pictures;
 
   return (
     `<section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${destinationPoint.description}</p>
-
-        <div class="event__photos-container">
+${(pictures.length === 0) ? '' : `<div class="event__photos-container">
           <div class="event__photos-tape">
             ${pictures.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
           </div>
-        </div>
+        </div>`}
+
       </section>`
   );
 };
@@ -140,7 +141,7 @@ const createPointEditTemplate = (point, offerList, destinationList, isNew) => {
                 <section class="event__details">
                   ${createOffersTemplate(offers, type, offerList, isDisabled)}
 
-                  ${createDestinationTemplate(destination, destinationList)}
+                  ${createDestinationTemplate(destination, destinationList, id)}
                 </section>
               </form>
               </li>`
