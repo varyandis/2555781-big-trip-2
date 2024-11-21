@@ -60,6 +60,7 @@ export default class Board {
       case SortType.TIME:
         return filteredPoints.sort(sortTime);
     }
+
     return filteredPoints;
   }
 
