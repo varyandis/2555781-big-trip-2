@@ -79,7 +79,6 @@ export default class Board {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter.init(this.offers, this.destination);
-
   }
 
   #handleSortTypeChange = (sortType) => {

@@ -33,11 +33,11 @@ const diffTime = (dateFrom, dateTo) => {
   const minutes = totalMinutes % 60;
 
   if (totalDays > 0) {
-    return `${totalDays}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
+    return `${String(totalDays).padStart(2, '0')}D ${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
   } else if (totalHours > 0) {
     return `${String(hours).padStart(2, '0')}H ${String(minutes).padStart(2, '0')}M`;
   } else {
-    return `${totalMinutes}M`;
+    return `${String(totalMinutes).padStart(2, '0')}M`;
   }
 };
 

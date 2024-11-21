@@ -56,7 +56,6 @@ export default class NewPointPresenter {
 
   #handleFormSubmit = (point) => {
     this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
-    // this.destroy();
   };
 
   #handleDeleteClick = () => {
