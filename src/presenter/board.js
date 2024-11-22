@@ -38,6 +38,7 @@ export default class Board {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
@@ -53,7 +54,6 @@ export default class Board {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.point;
     const filteredPoints = filter[this.#filterType](points);
-
     switch (this.#currentSortType) {
       case SortType.PRICE:
         return filteredPoints.sort(sortDay);

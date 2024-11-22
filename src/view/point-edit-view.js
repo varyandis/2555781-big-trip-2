@@ -160,6 +160,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   constructor({point = BLANK_POINT, offers, destination, onFormSubmit, onDeleteClick, onCloseButtonClick}) {
     super();
+
     this._setState(PointEditView.parsePointToState(point, destination));
     this.#offers = offers;
     this.#destination = destination;

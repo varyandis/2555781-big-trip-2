@@ -28,7 +28,6 @@ export default class PointPresenter {
   }
 
   init(point, offers, destination) {
-
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
