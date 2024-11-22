@@ -104,7 +104,8 @@ export default class Board {
 
   #renderNoPoint() {
     this.#noPointComponent = new NoPointView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
+      isApiError: this.#pointsModel.isApiError
     });
 
     render(this.#noPointComponent, this.#boardContainer);
@@ -125,7 +126,7 @@ export default class Board {
       return;
     }
 
-    if (this.points.length === 0) {
+    if (this.points.length === 0 || this.#pointsModel.isApiError) {
       return this.#renderNoPoint();
     }
 
