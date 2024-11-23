@@ -13,20 +13,25 @@ export default class NewPointPresenter {
   #destination = null;
   #point = null;
   #boardContainer = null;
-  #pointsModel = null
+  #pointsModel = null;
   #noPointComponent = null;
 
   #pointEditComponent = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy, pointsModel, boardContainer}) {
+  constructor({pointListContainer, onDataChange, onDestroy, pointsModel, boardContainer, noPointComponent}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
     this.#pointsModel = pointsModel;
     this.#boardContainer = boardContainer;
+    this.#noPointComponent = noPointComponent;
   }
 
   init(offers, destination, point) {
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      this.#noPointComponent = null;
+    }
     if (this.#pointEditComponent !== null) {
       return;
     }
@@ -45,21 +50,16 @@ export default class NewPointPresenter {
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
+
+
   }
 
   destroy() {
-    if (this.#pointsModel.point.length === 0) {
-      this.#noPointComponent = new NoPointView({
-        filterType: FilterType.EVERYTHING,
-        isApiError: this.#pointsModel.isApiError});
-      render(this.#noPointComponent, this.#boardContainer);
-    }
-
     if (this.#pointEditComponent === null) {
       return;
     }
 
-    this.#handleDestroy();
+    this.#handleDestroy(this.#noPointComponent);
 
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;

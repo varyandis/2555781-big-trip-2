@@ -47,7 +47,8 @@ export default class Board {
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy,
       pointsModel: this.#pointsModel,
-      boardContainer: this.#boardContainer
+      boardContainer: this.#boardContainer,
+      noPointComponent: this.#noPointComponent
     });
 
   }
@@ -82,12 +83,11 @@ export default class Board {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     if (this.#noPointComponent) {
-      remove(this.#noPointComponent);
-      this.#newPointPresenter.init(this.offers, this.destination);
-    } else {
-      this.#newPointPresenter.init(this.offers, this.destination);
+      this.#clearBoard();
+
+      return this.#newPointPresenter.init(this.offers, this.destination);
     }
-    // this.#newPointPresenter.init(this.offers, this.destination);
+    this.#newPointPresenter.init(this.offers, this.destination);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -133,6 +133,7 @@ export default class Board {
       this.#renderLoading();
       return;
     }
+
 
     if (this.points.length === 0 || this.#pointsModel.isApiError) {
       return this.#renderNoPoint();

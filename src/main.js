@@ -1,7 +1,9 @@
-import {render, RenderPosition} from '../src/framework/render.js';
+import {remove, render, RenderPosition} from '../src/framework/render.js';
 // import {render, RenderPosition} from './render.js';
 import TripMainInfoView from './view/info-view.js';
 // import FilterPresenter from './presenter/filter.js';
+import NoPointView from './view/no-point-view.js';
+import { FilterType } from './const.js';
 import FilterPresenter from './presenter/filter.js';
 import Board from './presenter/board.js';
 import PointsModel from './model/points-model.js';
@@ -32,6 +34,9 @@ const tripInfoPresenter = new TripInfoPresenter({
   pointsModel
 });
 
+const noPoint = new NoPointView({
+  filterType: FilterType.EVERYTHING,
+  isApiError: pointsModel.isApiError});
 // render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
 
 const newPointButtonComponent = new NewPointButtonView({
@@ -40,11 +45,15 @@ const newPointButtonComponent = new NewPointButtonView({
 
 function handleNewPointFormClose() {
   newPointButtonComponent.element.disabled = false;
+  if (pointsModel.point.length === 0) {
+
+    render(noPoint, siteMainSortElement);
+  }
 }
 
 function handleNewPointButtonClick() {
   boardPresenter.createPoint();
-
+  remove(noPoint);
   newPointButtonComponent.element.disabled = true;
 }
 
