@@ -28,7 +28,6 @@ export default class PointPresenter {
   }
 
   init(point, offers, destination) {
-
     this.#point = point;
     this.#offers = offers;
     this.#destination = destination;
@@ -49,7 +48,8 @@ export default class PointPresenter {
       offers: this.#offers,
       destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
+      onCloseButtonClick: this.#handleCloseButtonClick
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -62,7 +62,8 @@ export default class PointPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#pointEditComponent, prevPointEditComponent);
+      replace(this.#pointComponent, prevPointEditComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -87,6 +88,11 @@ export default class PointPresenter {
     }
   };
 
+  #handleCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#replaceFormToCard();
+  };
+
   #replaceCardToForm() {
     replace(this.#pointEditComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
@@ -95,6 +101,7 @@ export default class PointPresenter {
   }
 
   #replaceFormToCard() {
+    this.#pointEditComponent.updateElement(this.#point);
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;
@@ -110,7 +117,6 @@ export default class PointPresenter {
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       point);
-    this.#replaceFormToCard();
   };
 
   #handleFavoriteClick = () => {
@@ -128,4 +134,40 @@ export default class PointPresenter {
     );
   };
 
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      if (this.#mode === Mode.EDITING) {
+        this.#pointEditComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      }
+    };
+
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.shake(resetFormState);
+    } else {
+      this.#pointComponent.shake();
+    }
+  }
 }

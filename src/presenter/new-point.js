@@ -1,20 +1,9 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
-
-import NewPointView from '../view/point-new-view.js';
-
-const BLANK_POINT = {
-  id: '',
-  basePrice: 1100,
-  dateFrom: '',
-  dateTo: '',
-  destination: '1',
-  isFavorite: false,
-  offers: [
-    '31','32','33',
-  ],
-  type: 'flight'
-};
+import PointEditView from '../view/point-edit-view.js';
+import { FilterType } from '../const.js';
+import NoPointView from '../view/no-point-view.js';
+// import NewPointView from '../view/point-new-view.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
@@ -23,35 +12,42 @@ export default class NewPointPresenter {
   #offers = null;
   #destination = null;
   #point = null;
-
+  #boardContainer = null;
+  #pointsModel = null;
+  #noPointComponent = null;
 
   #pointEditComponent = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy}) {
+  constructor({pointListContainer, onDataChange, onDestroy, pointsModel, boardContainer, noPointComponent}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
+    this.#pointsModel = pointsModel;
+    this.#boardContainer = boardContainer;
+    this.#noPointComponent = noPointComponent;
   }
 
-  init(offers, destination, point = BLANK_POINT) {
+  init(offers, destination, pointListContainer) {
+
     if (this.#pointEditComponent !== null) {
       return;
     }
-    this.#point = point;
+    this.#pointListContainer = pointListContainer;
     this.#offers = offers;
     this.#destination = destination;
 
-    this.#pointEditComponent = new NewPointView({
-      point: this.#point,
+    this.#pointEditComponent = new PointEditView({
       offers: this.#offers,
       destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
+
+
   }
 
   destroy() {
@@ -59,20 +55,17 @@ export default class NewPointPresenter {
       return;
     }
 
-    this.#handleDestroy();
+    this.#handleDestroy(this.#noPointComponent);
 
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+
   }
 
   #handleFormSubmit = (point) => {
-    const generatedId = Math.random().toString(16).slice(2);
-    const newPoint = {id: generatedId, ...point};
-
-    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, newPoint);
-    this.destroy();
+    this.#handleDataChange(UserAction.ADD_POINT, UpdateType.MINOR, point);
   };
 
   #handleDeleteClick = () => {
@@ -85,4 +78,23 @@ export default class NewPointPresenter {
       this.destroy();
     }
   };
+
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  }
 }

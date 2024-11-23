@@ -1,4 +1,5 @@
 import { remove, render} from '../framework/render.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import ListSortView from '../view/sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoPointView from '../view/no-point-view.js';
@@ -8,6 +9,11 @@ import { sortDay, sortTime, sortDate } from '../utils/point.js';
 import {filter} from '../utils/filter.js';
 import NewPointPresenter from './new-point.js';
 import LoadingView from '../view/loading-view.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
 
 export default class Board {
   #boardContainer = null;
@@ -23,18 +29,26 @@ export default class Board {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
     this.#newPointPresenter = new NewPointPresenter({
       pointListContainer: this.#pointListComponent.element,
       onDataChange: this.#handleViewAction,
-      onDestroy: onNewPointDestroy
+      onDestroy: onNewPointDestroy,
+      pointsModel: this.#pointsModel,
+      boardContainer: this.#boardContainer,
+      noPointComponent: this.#noPointComponent
     });
 
   }
@@ -43,13 +57,13 @@ export default class Board {
     this.#filterType = this.#filterModel.filter;
     const points = this.#pointsModel.point;
     const filteredPoints = filter[this.#filterType](points);
-
     switch (this.#currentSortType) {
       case SortType.PRICE:
         return filteredPoints.sort(sortDay);
       case SortType.TIME:
         return filteredPoints.sort(sortTime);
     }
+
     return filteredPoints;
   }
 
@@ -68,8 +82,12 @@ export default class Board {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newPointPresenter.init(this.offers, this.destination);
 
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+    }
+    render(this.#pointListComponent, this.#boardContainer);
+    this.#newPointPresenter.init(this.offers, this.destination, this.#pointListComponent.element);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -94,7 +112,8 @@ export default class Board {
 
   #renderNoPoint() {
     this.#noPointComponent = new NoPointView({
-      filterType: this.#filterType
+      filterType: this.#filterType,
+      isApiError: this.#pointsModel.isApiError
     });
 
     render(this.#noPointComponent, this.#boardContainer);
@@ -115,7 +134,8 @@ export default class Board {
       return;
     }
 
-    if (this.points.length === 0) {
+
+    if (this.points.length === 0 || this.#pointsModel.isApiError) {
       return this.#renderNoPoint();
     }
 
@@ -130,18 +150,35 @@ export default class Board {
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#pointsModel.updatePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setSaving();
+        try {
+          await this.#pointsModel.updatePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#pointsModel.addPoint(updateType, update);
+        this.#newPointPresenter.setSaving();
+        try {
+          await this.#pointsModel.addPoint(updateType, update);
+        } catch(err) {
+          this.#newPointPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_POINT:
-        this.#pointsModel.deletePoint(updateType, update);
+        this.#pointPresenter.get(update.id).setDeleting();
+        try {
+          await this.#pointsModel.deletePoint(updateType, update);
+        } catch(err) {
+          this.#pointPresenter.get(update.id).setAborting();
+        }
         break;
     }
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -179,12 +216,12 @@ export default class Board {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
 
-
     remove(this.#sortComponent);
     remove(this.#loadingComponent);
 
     if (resetSortType) {
-      this.#currentSortType = SortType.DEFAULT;
+      this.#currentSortType = SortType.DAY;
+      this.#pointsModel.point.sort(sortDate);
     }
 
     if (this.#noPointComponent) {
