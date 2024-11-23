@@ -27,20 +27,16 @@ export default class NewPointPresenter {
     this.#noPointComponent = noPointComponent;
   }
 
-  init(offers, destination, point) {
-    if (this.#noPointComponent) {
-      remove(this.#noPointComponent);
-      this.#noPointComponent = null;
-    }
+  init(offers, destination, pointListContainer) {
+
     if (this.#pointEditComponent !== null) {
       return;
     }
-    this.#point = point;
+    this.#pointListContainer = pointListContainer;
     this.#offers = offers;
     this.#destination = destination;
 
     this.#pointEditComponent = new PointEditView({
-      point: this.#point,
       offers: this.#offers,
       destination: this.#destination,
       onFormSubmit: this.#handleFormSubmit,

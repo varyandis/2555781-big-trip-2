@@ -205,6 +205,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
 
     this.#setDatepicker();
+
   }
 
   get template() {

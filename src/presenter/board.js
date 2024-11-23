@@ -82,12 +82,12 @@ export default class Board {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    if (this.#noPointComponent) {
-      this.#clearBoard();
 
-      return this.#newPointPresenter.init(this.offers, this.destination);
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
     }
-    this.#newPointPresenter.init(this.offers, this.destination);
+    render(this.#pointListComponent, this.#boardContainer);
+    this.#newPointPresenter.init(this.offers, this.destination, this.#pointListComponent.element);
   }
 
   #handleSortTypeChange = (sortType) => {
