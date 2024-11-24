@@ -37,7 +37,6 @@ const tripInfoPresenter = new TripInfoPresenter({
 const noPoint = new NoPointView({
   filterType: FilterType.EVERYTHING,
   isApiError: pointsModel.isApiError});
-// render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
 
 const newPointButtonComponent = new NewPointButtonView({
   onClick: handleNewPointButtonClick
@@ -62,4 +61,7 @@ filterPresenter.init();
 boardPresenter.init();
 pointsModel.init().finally(() => {
   render(newPointButtonComponent, siteMainInfoElement);
+  if (pointsModel.isApiError) {
+    newPointButtonComponent.element.disabled = true;
+  }
 });
