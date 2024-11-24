@@ -71,7 +71,7 @@ export default class Board {
     return this.#pointsModel.offers;
   }
 
-  get destination() {
+  get destinations() {
     return this.#pointsModel.destinations;
   }
 
@@ -87,7 +87,7 @@ export default class Board {
       remove(this.#noPointComponent);
     }
     render(this.#pointListComponent, this.#boardContainer);
-    this.#newPointPresenter.init(this.offers, this.destination, this.#pointListComponent.element);
+    this.#newPointPresenter.init(this.offers, this.destinations, this.#pointListComponent.element);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -110,7 +110,7 @@ export default class Board {
     render(this.#sortComponent, this.#boardContainer);
   }
 
-  #renderNoPoint() {
+  #renderEmptyState() {
     this.#noPointComponent = new NoPointView({
       filterType: this.#filterType,
       isApiError: this.#pointsModel.isApiError
@@ -120,11 +120,10 @@ export default class Board {
   }
 
   #renderPointList() {
-
     render(this.#pointListComponent, this.#boardContainer);
 
     for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i], this.offers, this.destination);
+      this.#renderPoint(this.points[i], this.offers, this.destinations);
     }
   }
 
@@ -134,9 +133,8 @@ export default class Board {
       return;
     }
 
-
     if (this.points.length === 0 || this.#pointsModel.isApiError) {
-      return this.#renderNoPoint();
+      return this.#renderEmptyState();
     }
 
     this.points.sort(sortDate);
@@ -144,14 +142,20 @@ export default class Board {
     this.#renderPointList();
   }
 
-  #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handleViewAction, onModeChange: this.#handleModeChange});
-    pointPresenter.init(point, offers, destination);
-    this.#pointPresenter.set(point.id, pointPresenter);
+  #renderPoint(points, offers, destinations) {
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange
+    });
+
+    pointPresenter.init(points, offers, destinations);
+    this.#pointPresenter.set(points.id, pointPresenter);
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointPresenter.get(update.id).setSaving();
