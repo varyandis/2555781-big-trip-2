@@ -55,7 +55,7 @@ export default class Board {
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#pointsModel.point;
+    const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.PRICE:
@@ -72,7 +72,7 @@ export default class Board {
   }
 
   get destination() {
-    return this.#pointsModel.destination;
+    return this.#pointsModel.destinations;
   }
 
   init() {
@@ -221,7 +221,7 @@ export default class Board {
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
-      this.#pointsModel.point.sort(sortDate);
+      this.#pointsModel.points.sort(sortDate);
     }
 
     if (this.#noPointComponent) {

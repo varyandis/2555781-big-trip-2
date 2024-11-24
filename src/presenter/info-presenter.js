@@ -19,8 +19,8 @@ export default class TripInfoPresenter {
 
   init() {
     const prevTripInfoComponent = this.#tripInfoComponent;
-    const points = this.#pointsModel.point;
-    const destination = this.#pointsModel.destination;
+    const points = this.#pointsModel.points;
+    const destination = this.#pointsModel.destinations;
     const offers = this.#pointsModel.offers;
 
     // const shouldComponentRender = points.length > 0 && destination.length > 0 && offers.length > 0;

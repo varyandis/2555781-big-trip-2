@@ -44,7 +44,7 @@ const newPointButtonComponent = new NewPointButtonView({
 
 function handleNewPointFormClose() {
   newPointButtonComponent.element.disabled = false;
-  if (pointsModel.point.length === 0) {
+  if (pointsModel.points.length === 0) {
 
     render(noPoint, siteMainSortElement);
   }
