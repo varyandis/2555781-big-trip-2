@@ -17,20 +17,20 @@ export default class PointPresenter {
 
   #point = null;
   #offers = null;
-  #destination = null;
+  #destinations = null;
   #mode = Mode.DEFAULT;
 
 
-  constructor({pointListContainer: pointListContainer, onDataChange, onModeChange}) {
+  constructor({pointListContainer, onDataChange, onModeChange}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, offers, destination) {
+  init(point, offers, destinations) {
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
@@ -38,7 +38,7 @@ export default class PointPresenter {
     this.#pointComponent = new EventsItemView({
       point: this.#point,
       offers: this.#offers,
-      destination: this.#destination,
+      destinations: this.#destinations,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
     });
@@ -46,7 +46,7 @@ export default class PointPresenter {
     this.#pointEditComponent = new PointEditView({
       point: this.#point,
       offers: this.#offers,
-      destination: this.#destination,
+      destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       onCloseButtonClick: this.#handleCloseButtonClick
@@ -71,8 +71,13 @@ export default class PointPresenter {
   }
 
   destroy() {
-    remove(this.#pointComponent);
-    remove(this.#pointEditComponent);
+    if (this.#pointComponent) {
+      remove(this.#pointComponent);
+    }
+    if (this.#pointEditComponent) {
+      remove(this.#pointEditComponent);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
   }
 
   resetView() {
@@ -88,8 +93,7 @@ export default class PointPresenter {
     }
   };
 
-  #handleCloseButtonClick = (evt) => {
-    evt.preventDefault();
+  #handleCloseButtonClick = () => {
     this.#replaceFormToCard();
   };
 
@@ -141,7 +145,6 @@ export default class PointPresenter {
         isSaving: true,
       });
     }
-
   }
 
   setDeleting() {

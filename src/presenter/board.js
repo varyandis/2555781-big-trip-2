@@ -34,10 +34,14 @@ export default class Board {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  #newPointButtonComponent = null;
+
+  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#newPointButtonComponent = newPointButtonComponent;
+
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -46,8 +50,6 @@ export default class Board {
       pointListContainer: this.#pointListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy,
-      pointsModel: this.#pointsModel,
-      boardContainer: this.#boardContainer,
       noPointComponent: this.#noPointComponent
     });
 
@@ -142,15 +144,15 @@ export default class Board {
     this.#renderPointList();
   }
 
-  #renderPoint(points, offers, destinations) {
+  #renderPoint(point, offers, destinations) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#pointListComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
 
-    pointPresenter.init(points, offers, destinations);
-    this.#pointPresenter.set(points.id, pointPresenter);
+    pointPresenter.init(point, offers, destinations);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
@@ -201,6 +203,9 @@ export default class Board {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+        if (this.#newPointButtonComponent) {
+          this.#newPointButtonComponent.element.disabled = false;
+        }
         this.#renderBoard();
         break;
     }
@@ -208,6 +213,9 @@ export default class Board {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#boardContainer);
+    if (this.#newPointButtonComponent) {
+      this.#newPointButtonComponent.element.disabled = true;
+    }
   }
 
   #handleModeChange = () => {

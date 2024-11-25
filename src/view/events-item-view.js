@@ -17,6 +17,7 @@ const createSelectedOffersTemplate = (offers, type, offerList) => {
 };
 
 const createEventsItemTemplate = (point, offerList, destinationList) => {
+
   const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
 
   const timeFromHumanize = humanizePointDueTime(dateFrom);
@@ -66,15 +67,15 @@ const createEventsItemTemplate = (point, offerList, destinationList) => {
 export default class EventsItemView extends AbstractView {
   #point = null;
   #offers = null;
-  #destination = null;
+  #destinations = null;
   #handleEditClick = null;
   #handleFavoriteClick = null;
 
-  constructor({point, offers, destination, onEditClick, onFavoriteClick}) {
+  constructor({point, offers, destinations, onEditClick, onFavoriteClick}) {
     super();
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
     this.#handleEditClick = onEditClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
@@ -83,7 +84,7 @@ export default class EventsItemView extends AbstractView {
   }
 
   get template() {
-    return createEventsItemTemplate(this.#point, this.#offers, this.#destination);
+    return createEventsItemTemplate(this.#point, this.#offers, this.#destinations);
   }
 
   #editClickHandle = (evt) => {

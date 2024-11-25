@@ -7,7 +7,6 @@ export default class TripInfoPresenter {
   #pointsModel = null;
 
   #tripInfoComponent = null;
-  #componentDidRender = false;
 
   constructor({tripInfoContainerElement, pointsModel}) {
     this.#tripInfoContainerElement = tripInfoContainerElement;
@@ -23,11 +22,9 @@ export default class TripInfoPresenter {
     const destinations = this.#pointsModel.destinations;
     const offers = this.#pointsModel.offers;
 
-    // const shouldComponentRender = points.length > 0 && destination.length > 0 && offers.length > 0;
-
     this.#tripInfoComponent = new TripMainInfoView({
       points,
-      destination: destinations,
+      destinations,
       offers
     });
 

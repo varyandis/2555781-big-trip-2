@@ -34,6 +34,7 @@ function generateTripValue (points, offers) {
 }
 
 const createTemplateTitle = (points, destinationList) => {
+
   if (points.length === 0 || destinationList.length === 0) {
     return '';
   }
@@ -71,9 +72,9 @@ const createTripMainInfoTemplate = (points, destinationList, offerList) => {
 
   const templateTitle = createTemplateTitle(points, destinationList);
 
-  if(points.length === 0) {
+  // if(points.length === 0) {
 
-  }
+  // }
 
   return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -89,11 +90,11 @@ export default class TripMainInfoView extends AbstractView {
   #destinations = [];
   #offers = [];
 
-  constructor({points, destination, offers}) {
+  constructor({points: point, destinations, offers}) {
     super();
 
-    this.#points = points;
-    this.#destinations = destination;
+    this.#points = point;
+    this.#destinations = destinations;
     this.#offers = offers;
 
   }

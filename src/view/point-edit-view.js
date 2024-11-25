@@ -150,7 +150,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
 
 export default class PointEditView extends AbstractStatefulView {
   #offers = null;
-  #destination = null;
+  #destinations = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
   #initialPoint = null;
@@ -159,12 +159,12 @@ export default class PointEditView extends AbstractStatefulView {
   #isNew = true;
   #handleCloseButtonClick = null;
 
-  constructor({point = BLANK_POINT, offers, destination, onFormSubmit, onDeleteClick, onCloseButtonClick}) {
+  constructor({point = BLANK_POINT, offers, destinations, onFormSubmit, onDeleteClick, onCloseButtonClick}) {
     super();
 
-    this._setState(PointEditView.parsePointToState(point, destination));
+    this._setState(PointEditView.parsePointToState(point, destinations));
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
     this.#initialPoint = point;
@@ -209,7 +209,7 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   get template() {
-    return createPointEditTemplate(this._state, this.#offers, this.#destination, this.#isNew);
+    return createPointEditTemplate(this._state, this.#offers, this.#destinations, this.#isNew);
   }
 
   #selectedTypeHandler = (evt) => {
@@ -242,7 +242,7 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #destinationBlurHandler = (evt) => {
-    const currentDestination = this.#destination.find((destination) => destination.id === this._state.destination);
+    const currentDestination = this.#destinations.find((destination) => destination.id === this._state.destination);
     if (currentDestination) {
       evt.target.value = currentDestination.name;
     }
@@ -250,7 +250,7 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #selectedDestinationHandler = (evt) => {
-    const nextDestination = this.#destination.find((destination) => destination.name === evt.target.value);
+    const nextDestination = this.#destinations.find((destination) => destination.name === evt.target.value);
     if (nextDestination) {
       this.updateElement({
         destination: nextDestination.id,
@@ -274,12 +274,12 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destination));
+    this.#handleFormSubmit(PointEditView.parseStateToPoint(this._state, this.#destinations));
   };
 
   #formEscHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#initialPoint, this.#destination);
+    this.#handleFormSubmit(this.#initialPoint, this.#destinations);
 
   };
 
@@ -312,7 +312,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state, this.#destination));
+    this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state, this.#destinations));
   };
 
   static parsePointToState(point) {
