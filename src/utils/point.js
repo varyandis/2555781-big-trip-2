@@ -51,5 +51,15 @@ const sortDate = (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom);
 const sortTime = (a, b) => new Date(a.dateFrom) - new Date(a.dateTo) - (new Date(b.dateFrom) - new Date(b.dateTo));
 
 
-export { getListOffer, getListDestination,getDestinationName, getDestinationDescription, isPointFuture, isPointPresent, isPointPast, sortDay, diffTime, sortTime, sortDate};
+export { getListOffer,
+  getListDestination,
+  getDestinationName,
+  getDestinationDescription,
+  isPointFuture,
+  isPointPresent,
+  isPointPast,
+  sortDay,
+  diffTime,
+  sortTime,
+  sortDate};
 

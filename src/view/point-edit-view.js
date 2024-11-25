@@ -1,6 +1,6 @@
 import he from 'he';
 import { getListOffer, getListDestination, getDestinationName } from '../utils/point.js';
-import { isTruthy } from '../utils/common.js';
+import { isFalsy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
@@ -27,7 +27,7 @@ const ResetButtonTitle = {
 
 const createOffersTemplate = (offers, type, offerList, isDisabled) => {
   const listOffer = getListOffer(type, offerList);
-  if (isTruthy(listOffer)) {
+  if (isFalsy(listOffer)) {
     return '';
   }
 
@@ -48,7 +48,7 @@ const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 const createDestinationTemplate = (destination, destinationList) => {
   const destinationPoint = getListDestination(destination, destinationList);
 
-  if (isTruthy(destination) || !destinationPoint.description) {
+  if (isFalsy(destination) || !destinationPoint.description) {
     return '';
   }
 
