@@ -1,5 +1,5 @@
 import he from 'he';
-import { getListOffer, getListDestination, getDestinationName } from '../utils/point.js';
+import { getOffersByType, getDestinationById, getDestinationNameById } from '../utils/point.js';
 import { isFalsy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
 import { EVENT_TYPE } from '../const.js';
@@ -26,7 +26,7 @@ const ResetButtonTitle = {
 };
 
 const createOffersTemplate = (offers, type, offerList, isDisabled) => {
-  const listOffer = getListOffer(type, offerList);
+  const listOffer = getOffersByType(type, offerList);
   if (isFalsy(listOffer)) {
     return '';
   }
@@ -46,7 +46,7 @@ const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 
 
 const createDestinationTemplate = (destination, destinationList) => {
-  const destinationPoint = getListDestination(destination, destinationList);
+  const destinationPoint = getDestinationById(destination, destinationList);
 
   if (isFalsy(destination) || !destinationPoint.description) {
     return '';
@@ -112,7 +112,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                     <label class="event__label  event__type-output" for="event-destination-${id}">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationName(destination, destinationList)}" list="destination-list-${id}" ${isDisabled ? 'disabled' : ''}>
+                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationNameById(destination, destinationList)}" list="destination-list-${id}" ${isDisabled ? 'disabled' : ''}>
                     <datalist id="destination-list-${id}">${createDestinationListTemplate(destinationList)}
                     </datalist>
                   </div>

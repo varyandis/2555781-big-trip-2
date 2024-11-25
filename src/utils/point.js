@@ -3,13 +3,13 @@ import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
-const getListOffer = (typePoint, offers) => offers.find((item) => item.type === typePoint).offers;
+const getOffersByType = (typePoint, offers) => offers.find((item) => item.type === typePoint).offers;
 
-const getListDestination = (id, destinationList) => destinationList.find((item) => item.id === id);
+const getDestinationById = (id, destinationList) => destinationList.find((item) => item.id === id);
 
-const getDestinationName = (destinationId, destinationList) => destinationList.find((index) => index.id === destinationId).name;
+const getDestinationNameById = (destinationId, destinationList) => destinationList.find((index) => index.id === destinationId).name;
 
-const getDestinationDescription = (destinationName, destinationList) => destinationList.find((index) => index.name === destinationName);
+const getDestinationByName = (destinationName, destinationList) => destinationList.find((index) => index.name === destinationName);
 
 const isPointFuture = (dateFrom) => dateFrom && dayjs().isBefore(dayjs(dateFrom));
 
@@ -18,12 +18,13 @@ const isPointPresent = (dateFrom, dateTo) => {
   return dateFrom && dateTo && now.isAfter(dateFrom) && now.isBefore(dateTo);
 };
 
-const diffTime = (dateFrom, dateTo) => {
+const isPointPast = (dateTo) => dateTo && dayjs().isAfter(dateTo);
+
+const getTimeDifference = (dateFrom, dateTo) => {
   const start = new Date(dateFrom);
   const end = new Date(dateTo);
 
   const diffInMs = end - start;
-
 
   const totalMinutes = Math.floor(diffInMs / 1000 / 60);
   const totalHours = Math.floor(totalMinutes / 60);
@@ -41,9 +42,6 @@ const diffTime = (dateFrom, dateTo) => {
   }
 };
 
-
-const isPointPast = (dateTo) => dateTo && dayjs().isAfter(dateTo);
-
 const sortDay = (a, b) => b.basePrice - a.basePrice;
 
 const sortDate = (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom);
@@ -51,15 +49,15 @@ const sortDate = (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom);
 const sortTime = (a, b) => new Date(a.dateFrom) - new Date(a.dateTo) - (new Date(b.dateFrom) - new Date(b.dateTo));
 
 
-export { getListOffer,
-  getListDestination,
-  getDestinationName,
-  getDestinationDescription,
+export { getOffersByType,
+  getDestinationById,
+  getDestinationNameById,
+  getDestinationByName,
   isPointFuture,
   isPointPresent,
   isPointPast,
   sortDay,
-  diffTime,
+  getTimeDifference,
   sortTime,
   sortDate};
 

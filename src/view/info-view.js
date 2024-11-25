@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { sortDate } from '../utils/point.js';
-import { getDestinationName } from '../utils/point.js';
+import { getDestinationNameById } from '../utils/point.js';
 import dayjs from 'dayjs';
 
 
@@ -39,8 +39,8 @@ const createTemplateTitle = (points, destinationList) => {
     return '';
   }
 
-  const titleBegin = getDestinationName(points[0].destination, destinationList);
-  const titleEnd = getDestinationName(points[points.length - 1].destination, destinationList);
+  const titleBegin = getDestinationNameById(points[0].destination, destinationList);
+  const titleEnd = getDestinationNameById(points[points.length - 1].destination, destinationList);
 
   if (points.length === 1) {
     return `<h1 class="trip-info__title">${titleBegin}</h1>`;
@@ -51,7 +51,7 @@ const createTemplateTitle = (points, destinationList) => {
   }
 
   if (points.length === 3) {
-    const titleMiddle = getDestinationName(points[1].destination, destinationList);
+    const titleMiddle = getDestinationNameById(points[1].destination, destinationList);
     return `<h1 class="trip-info__title">${titleBegin} &mdash; ${titleMiddle} &mdash; ${titleEnd}</h1>`;
   }
 
