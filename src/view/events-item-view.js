@@ -89,11 +89,15 @@ export default class EventsItemView extends AbstractView {
 
   #editClickHandle = (evt) => {
     evt.preventDefault();
-    this.#handleEditClick();
+    if (this.#handleEditClick) {
+      this.#handleEditClick();
+    }
   };
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFavoriteClick();
+    if (this.#handleFavoriteClick) {
+      this.#handleFavoriteClick();
+    }
   };
 }
