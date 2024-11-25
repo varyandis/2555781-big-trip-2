@@ -7,7 +7,6 @@ export default class TripInfoPresenter {
   #pointsModel = null;
 
   #tripInfoComponent = null;
-  #componentDidRender = false;
 
   constructor({tripInfoContainerElement, pointsModel}) {
     this.#tripInfoContainerElement = tripInfoContainerElement;
@@ -19,25 +18,22 @@ export default class TripInfoPresenter {
 
   init() {
     const prevTripInfoComponent = this.#tripInfoComponent;
-    const point = this.#pointsModel.point;
-    const destination = this.#pointsModel.destination;
+    const points = this.#pointsModel.points;
+    const destinations = this.#pointsModel.destinations;
     const offers = this.#pointsModel.offers;
+
     this.#tripInfoComponent = new TripMainInfoView({
-      point,
-      destination,
+      points,
+      destinations,
       offers
     });
 
     if (prevTripInfoComponent === null) {
       render(this.#tripInfoComponent, this.#tripInfoContainerElement, RenderPosition.AFTERBEGIN);
-      this.#componentDidRender = true;
       return;
     }
 
-    if (this.#componentDidRender) {
-      replace(this.#tripInfoComponent, prevTripInfoComponent);
-    }
-
+    replace(this.#tripInfoComponent, prevTripInfoComponent);
     remove(prevTripInfoComponent);
   }
 

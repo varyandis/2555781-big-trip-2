@@ -1,44 +1,37 @@
 import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import PointEditView from '../view/point-edit-view.js';
-import { FilterType } from '../const.js';
-import NoPointView from '../view/no-point-view.js';
-// import NewPointView from '../view/point-new-view.js';
 
 export default class NewPointPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #offers = null;
-  #destination = null;
-  #point = null;
-  #boardContainer = null;
-  #pointsModel = null;
+  #destinations = null;
+
   #noPointComponent = null;
 
   #pointEditComponent = null;
 
-  constructor({pointListContainer, onDataChange, onDestroy, pointsModel, boardContainer, noPointComponent}) {
+  constructor({pointListContainer, onDataChange, onDestroy, noPointComponent}) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
-    this.#pointsModel = pointsModel;
-    this.#boardContainer = boardContainer;
     this.#noPointComponent = noPointComponent;
   }
 
-  init(offers, destination, pointListContainer) {
-
+  init(offers, destinations, pointListContainer) {
     if (this.#pointEditComponent !== null) {
       return;
     }
+
     this.#pointListContainer = pointListContainer;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
 
     this.#pointEditComponent = new PointEditView({
       offers: this.#offers,
-      destination: this.#destination,
+      destinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
     });
@@ -46,7 +39,6 @@ export default class NewPointPresenter {
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
-
 
   }
 

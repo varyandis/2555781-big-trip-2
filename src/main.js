@@ -1,7 +1,4 @@
-import {remove, render, RenderPosition} from '../src/framework/render.js';
-// import {render, RenderPosition} from './render.js';
-import TripMainInfoView from './view/info-view.js';
-// import FilterPresenter from './presenter/filter.js';
+import {remove, render} from '../src/framework/render.js';
 import NoPointView from './view/no-point-view.js';
 import { FilterType } from './const.js';
 import FilterPresenter from './presenter/filter.js';
@@ -22,7 +19,18 @@ const siteMainFiltersElement = document.querySelector('.trip-controls__filters')
 const siteMainInfoElement = document.querySelector('.trip-main');
 
 const filterModel = new FilterModel();
-const boardPresenter = new Board({boardContainer: siteMainSortElement, pointsModel, filterModel, onNewPointDestroy: handleNewPointFormClose});
+
+const newPointButtonComponent = new NewPointButtonView({
+  onClick: handleNewPointButtonClick
+});
+
+const boardPresenter = new Board({
+  boardContainer: siteMainSortElement,
+  pointsModel,
+  filterModel,
+  onNewPointDestroy: handleNewPointFormClose,
+  newPointButtonComponent
+});
 const filterPresenter = new FilterPresenter({
   filterContainer: siteMainFiltersElement,
   filterModel,
@@ -37,15 +45,10 @@ const tripInfoPresenter = new TripInfoPresenter({
 const noPoint = new NoPointView({
   filterType: FilterType.EVERYTHING,
   isApiError: pointsModel.isApiError});
-// render(new TripMainInfoView(), siteMainInfoElement , RenderPosition.AFTERBEGIN);
-
-const newPointButtonComponent = new NewPointButtonView({
-  onClick: handleNewPointButtonClick
-});
 
 function handleNewPointFormClose() {
   newPointButtonComponent.element.disabled = false;
-  if (pointsModel.point.length === 0) {
+  if (pointsModel.points.length === 0) {
 
     render(noPoint, siteMainSortElement);
   }
@@ -60,6 +63,10 @@ function handleNewPointButtonClick() {
 tripInfoPresenter.init();
 filterPresenter.init();
 boardPresenter.init();
+render(newPointButtonComponent, siteMainInfoElement);
+newPointButtonComponent.element.disabled = true;
 pointsModel.init().finally(() => {
-  render(newPointButtonComponent, siteMainInfoElement);
+  if (pointsModel.isApiError) {
+    newPointButtonComponent.element.disabled = true;
+  }
 });

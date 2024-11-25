@@ -34,10 +34,14 @@ export default class Board {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy}) {
+  #newPointButtonComponent = null;
+
+  constructor({boardContainer, pointsModel, filterModel, onNewPointDestroy, newPointButtonComponent}) {
     this.#boardContainer = boardContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#newPointButtonComponent = newPointButtonComponent;
+
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -46,8 +50,6 @@ export default class Board {
       pointListContainer: this.#pointListComponent.element,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy,
-      pointsModel: this.#pointsModel,
-      boardContainer: this.#boardContainer,
       noPointComponent: this.#noPointComponent
     });
 
@@ -55,7 +57,7 @@ export default class Board {
 
   get points() {
     this.#filterType = this.#filterModel.filter;
-    const points = this.#pointsModel.point;
+    const points = this.#pointsModel.points;
     const filteredPoints = filter[this.#filterType](points);
     switch (this.#currentSortType) {
       case SortType.PRICE:
@@ -71,8 +73,8 @@ export default class Board {
     return this.#pointsModel.offers;
   }
 
-  get destination() {
-    return this.#pointsModel.destination;
+  get destinations() {
+    return this.#pointsModel.destinations;
   }
 
   init() {
@@ -87,7 +89,7 @@ export default class Board {
       remove(this.#noPointComponent);
     }
     render(this.#pointListComponent, this.#boardContainer);
-    this.#newPointPresenter.init(this.offers, this.destination, this.#pointListComponent.element);
+    this.#newPointPresenter.init(this.offers, this.destinations, this.#pointListComponent.element);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -110,7 +112,7 @@ export default class Board {
     render(this.#sortComponent, this.#boardContainer);
   }
 
-  #renderNoPoint() {
+  #renderEmptyState() {
     this.#noPointComponent = new NoPointView({
       filterType: this.#filterType,
       isApiError: this.#pointsModel.isApiError
@@ -120,11 +122,10 @@ export default class Board {
   }
 
   #renderPointList() {
-
     render(this.#pointListComponent, this.#boardContainer);
 
     for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i], this.offers, this.destination);
+      this.#renderPoint(this.points[i], this.offers, this.destinations);
     }
   }
 
@@ -134,9 +135,8 @@ export default class Board {
       return;
     }
 
-
     if (this.points.length === 0 || this.#pointsModel.isApiError) {
-      return this.#renderNoPoint();
+      return this.#renderEmptyState();
     }
 
     this.points.sort(sortDate);
@@ -144,14 +144,20 @@ export default class Board {
     this.#renderPointList();
   }
 
-  #renderPoint(point, offers, destination) {
-    const pointPresenter = new PointPresenter({pointListContainer: this.#pointListComponent.element, onDataChange: this.#handleViewAction, onModeChange: this.#handleModeChange});
-    pointPresenter.init(point, offers, destination);
+  #renderPoint(point, offers, destinations) {
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      onDataChange: this.#handleViewAction,
+      onModeChange: this.#handleModeChange
+    });
+
+    pointPresenter.init(point, offers, destinations);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
+
     switch (actionType) {
       case UserAction.UPDATE_POINT:
         this.#pointPresenter.get(update.id).setSaving();
@@ -197,6 +203,9 @@ export default class Board {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
+        if (this.#newPointButtonComponent) {
+          this.#newPointButtonComponent.element.disabled = false;
+        }
         this.#renderBoard();
         break;
     }
@@ -204,6 +213,9 @@ export default class Board {
 
   #renderLoading() {
     render(this.#loadingComponent, this.#boardContainer);
+    if (this.#newPointButtonComponent) {
+      this.#newPointButtonComponent.element.disabled = true;
+    }
   }
 
   #handleModeChange = () => {
@@ -221,7 +233,7 @@ export default class Board {
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
-      this.#pointsModel.point.sort(sortDate);
+      this.#pointsModel.points.sort(sortDate);
     }
 
     if (this.#noPointComponent) {
