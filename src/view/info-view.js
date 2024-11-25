@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { sortDate } from '../utils/point.js';
 import { getDestinationNameById } from '../utils/point.js';
 import dayjs from 'dayjs';
 
@@ -18,19 +17,19 @@ const calculateTripDates = (points) => {
 };
 
 function generateTripValue (points, offers) {
-  let tripValue = 0;
+  let total = 0;
 
   points.forEach((point) => {
-    tripValue += point.basePrice;
+    total += point.basePrice;
 
     const currentOffersObject = offers.find((offer) => offer.type === point.type);
 
     point.offers.forEach((chosenOfferId) => {
-      tripValue += currentOffersObject.offers.find((offer) => offer.id === chosenOfferId).price;
+      total += currentOffersObject.offers.find((offer) => offer.id === chosenOfferId).price;
     });
   });
 
-  return tripValue;
+  return total;
 }
 
 const createTemplateTitle = (points, destinationList) => {
@@ -39,23 +38,22 @@ const createTemplateTitle = (points, destinationList) => {
     return '';
   }
 
-  const titleBegin = getDestinationNameById(points[0].destination, destinationList);
-  const titleEnd = getDestinationNameById(points[points.length - 1].destination, destinationList);
+  const [titleBegin, titleMiddle, titleEnd] = [
+    getDestinationNameById(points[0].destination, destinationList),
+    points[1] ? getDestinationNameById(points[1].destination, destinationList) : '',
+    getDestinationNameById(points[points.length - 1].destination, destinationList),
+  ];
 
-  if (points.length === 1) {
-    return `<h1 class="trip-info__title">${titleBegin}</h1>`;
+  switch (points.length) {
+    case 1:
+      return `<h1 class="trip-info__title">${titleBegin}</h1>`;
+    case 2:
+      return `<h1 class="trip-info__title">${titleBegin} &mdash; ${titleEnd}</h1>`;
+    case 3:
+      return `<h1 class="trip-info__title">${titleBegin} &mdash; ${titleMiddle} &mdash; ${titleEnd}</h1>`;
+    default:
+      return `<h1 class="trip-info__title">${titleBegin} &mdash; ... &mdash; ${titleEnd}</h1>`;
   }
-
-  if (points.length === 2) {
-    return `<h1 class="trip-info__title">${titleBegin} &mdash; ${titleEnd}</h1>`;
-  }
-
-  if (points.length === 3) {
-    const titleMiddle = getDestinationNameById(points[1].destination, destinationList);
-    return `<h1 class="trip-info__title">${titleBegin} &mdash; ${titleMiddle} &mdash; ${titleEnd}</h1>`;
-  }
-
-  return `<h1 class="trip-info__title">${titleBegin} ... ${titleEnd}</h1>`;
 };
 
 const createTemplateCost = (points, offerList) => {
@@ -64,17 +62,12 @@ const createTemplateCost = (points, offerList) => {
   }
   return (`<p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${generateTripValue(points, offerList)}</span>
-      </p>`)
+      </p>`);
 };
 
 
 const createTripMainInfoTemplate = (points, destinationList, offerList) => {
-
   const templateTitle = createTemplateTitle(points, destinationList);
-
-  // if(points.length === 0) {
-
-  // }
 
   return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">
@@ -90,17 +83,16 @@ export default class TripMainInfoView extends AbstractView {
   #destinations = [];
   #offers = [];
 
-  constructor({points: point, destinations, offers}) {
+  constructor({points, destinations, offers}) {
     super();
 
-    this.#points = point;
+    this.#points = points;
     this.#destinations = destinations;
     this.#offers = offers;
 
   }
 
   get template() {
-
     return createTripMainInfoTemplate(this.#points, this.#destinations, this.#offers);
   }
 }
