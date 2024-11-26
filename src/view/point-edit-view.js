@@ -155,7 +155,6 @@ export default class PointEditView extends AbstractStatefulView {
   #destinations = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
-  #initialPoint = null;
   #datepickerFrom = null;
   #datepickerTo = null;
   #isNew = true;
@@ -169,7 +168,6 @@ export default class PointEditView extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
-    this.#initialPoint = point;
     this.#handleCloseButtonClick = onCloseButtonClick;
     this._restoreHandlers();
   }
