@@ -67,6 +67,10 @@ const createTemplateCost = (points, offerList) => {
 
 
 const createTripMainInfoTemplate = (points, destinationList, offerList) => {
+  // if (points.length === 0) {
+  //   return '';
+  // }
+
   const templateTitle = createTemplateTitle(points, destinationList);
 
   return (`<section class="trip-main__trip-info  trip-info">

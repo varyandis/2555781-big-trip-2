@@ -45,7 +45,7 @@ export default class NewPointPresenter {
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.DEFAULT;
+
   }
 
   destroy() {

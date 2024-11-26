@@ -66,6 +66,7 @@ boardPresenter.init();
 render(newPointButtonComponent, siteMainInfoElement);
 newPointButtonComponent.element.disabled = true;
 pointsModel.init().finally(() => {
+
   if (pointsModel.isApiError) {
     newPointButtonComponent.element.disabled = true;
   }
