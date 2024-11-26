@@ -2,6 +2,11 @@ import {remove, render, RenderPosition} from '../framework/render.js';
 import {UserAction, UpdateType} from '../const.js';
 import PointEditView from '../view/point-edit-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class NewPointPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
@@ -12,6 +17,7 @@ export default class NewPointPresenter {
   #noPointComponent = null;
 
   #pointEditComponent = null;
+  #mode = Mode.DEFAULT;
 
   constructor({pointListContainer, onDataChange, onDestroy, noPointComponent}) {
     this.#pointListContainer = pointListContainer;
@@ -39,7 +45,7 @@ export default class NewPointPresenter {
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
-
+    this.#mode = Mode.DEFAULT;
   }
 
   destroy() {
@@ -53,7 +59,6 @@ export default class NewPointPresenter {
     this.#pointEditComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-
   }
 
   #handleFormSubmit = (point) => {
@@ -76,17 +81,19 @@ export default class NewPointPresenter {
       isDisabled: true,
       isSaving: true,
     });
+
   }
 
   setAborting() {
     const resetFormState = () => {
-      this.#pointEditComponent.updateElement({
-        isDisabled: false,
-        isSaving: false,
-        isDeleting: false,
-      });
+      if (this.#mode === Mode.EDITING) {
+        this.#pointEditComponent.updateElement({
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
+        });
+      }
     };
-
     this.#pointEditComponent.shake(resetFormState);
   }
 }

@@ -105,7 +105,12 @@ export default class PointPresenter {
   }
 
   #replaceFormToCard() {
-    this.#pointEditComponent.updateElement(this.#point);
+    this.#pointEditComponent.updateElement({
+      ...this.#point,
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
     replace(this.#pointComponent, this.#pointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
     this.#mode = Mode.DEFAULT;

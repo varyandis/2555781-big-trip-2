@@ -148,6 +148,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
   );
 };
 
+
 export default class PointEditView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
