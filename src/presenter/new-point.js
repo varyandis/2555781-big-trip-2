@@ -45,19 +45,17 @@ export default class NewPointPresenter {
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
-
+    this.#mode = Mode.DEFAULT;
   }
 
   destroy() {
     if (this.#pointEditComponent === null) {
       return;
     }
-
     this.#handleDestroy(this.#noPointComponent);
 
     remove(this.#pointEditComponent);
     this.#pointEditComponent = null;
-
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
@@ -77,10 +75,12 @@ export default class NewPointPresenter {
   };
 
   setSaving() {
-    this.#pointEditComponent.updateElement({
-      isDisabled: true,
-      isSaving: true,
-    });
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
 
   }
 
@@ -94,6 +94,10 @@ export default class NewPointPresenter {
         });
       }
     };
-    this.#pointEditComponent.shake(resetFormState);
+    if (this.#mode === Mode.EDITING) {
+      this.#pointEditComponent.shake(resetFormState);
+    } else {
+      this.#pointEditComponent.shake();
+    }
   }
 }

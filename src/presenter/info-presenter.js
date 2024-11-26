@@ -17,9 +17,9 @@ export default class TripInfoPresenter {
   }
 
   init() {
-    // if (this.#pointsModel.isApiError || this.#pointsModel.points.length === 0) {
-    //   return;
-    // }
+    if (this.#pointsModel.isApiError || this.#pointsModel.points.length === 0) {
+      return remove(this.#tripInfoComponent);
+    }
     const prevTripInfoComponent = this.#tripInfoComponent;
     const points = this.#pointsModel.points;
     const destinations = this.#pointsModel.destinations;
@@ -41,12 +41,9 @@ export default class TripInfoPresenter {
   }
 
   #handleModelEvent = () => {
-    if (this.#pointsModel.points.length === 0 && this.#tripInfoComponent) {
-      remove(this.#tripInfoComponent);
-    }
-    if (this.#pointsModel.isApiError || this.#pointsModel.points.length === 0) {
-      return;
-    }
+    // if (this.#pointsModel.points.length === 0) {
+    //   return remove(this.#tripInfoComponent);
+    // }
     this.init();
   };
 }
