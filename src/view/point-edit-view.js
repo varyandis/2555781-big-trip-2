@@ -26,6 +26,7 @@ const ResetButtonTitle = {
 };
 
 const createOffersTemplate = (offers, type, offerList, isDisabled) => {
+
   const listOffer = getOffersByType(type, offerList);
   if (isFalsy(listOffer)) {
     return '';
@@ -86,6 +87,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
   const {basePrice, dateFrom, dateTo, destination, id, type, offers, isDisabled, isSaving, isDeleting} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
+  const destinationPoint = getDestinationById(destination, destinationList);
 
   return (
     `<li class="trip-events__item">
@@ -138,22 +140,22 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                     <span class="visually-hidden">Open event</span>
                   </button>`) : ''}
                 </header>
-                <section class="event__details">
+                ${(Boolean(destinationPoint?.description) || Boolean(destinationPoint?.pictures) || (getOffersByType(type, offerList).length !== 0)) ? `<section class="event__details">
                   ${createOffersTemplate(offers, type, offerList, isDisabled)}
 
                   ${createDestinationTemplate(destination, destinationList)}
-                </section>
+                </section>` : ''}
               </form>
               </li>`
   );
 };
-
 
 export default class PointEditView extends AbstractStatefulView {
   #offers = null;
   #destinations = null;
   #handleFormSubmit = null;
   #handleDeleteClick = null;
+  #initialPoint = null;
   #datepickerFrom = null;
   #datepickerTo = null;
   #isNew = true;
@@ -167,6 +169,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#destinations = destinations;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#initialPoint = point;
     this.#handleCloseButtonClick = onCloseButtonClick;
     this._restoreHandlers();
   }
