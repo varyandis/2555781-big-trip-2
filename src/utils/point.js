@@ -8,6 +8,7 @@ const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
 const ZERO_PAD = '0';
+const TARGET_LENGTH = 2;
 
 const getOffersByType = (typePoint, offers) => offers.find((item) => item.type === typePoint).offers;
 
@@ -40,11 +41,11 @@ const getTimeDifference = (dateFrom, dateTo) => {
   const minutes = totalMinutes % MINUTES_IN_HOUR;
 
   if (totalDays > 0) {
-    return `${String(totalDays).padStart(2, ZERO_PAD)}D ${String(hours).padStart(2, ZERO_PAD)}H ${String(minutes).padStart(2, ZERO_PAD)}M`;
+    return `${String(totalDays).padStart(TARGET_LENGTH, ZERO_PAD)}D ${String(hours).padStart(TARGET_LENGTH, ZERO_PAD)}H ${String(minutes).padStart(TARGET_LENGTH, ZERO_PAD)}M`;
   } else if (totalHours > 0) {
-    return `${String(hours).padStart(2, ZERO_PAD)}H ${String(minutes).padStart(2, ZERO_PAD)}M`;
+    return `${String(hours).padStart(TARGET_LENGTH, ZERO_PAD)}H ${String(minutes).padStart(TARGET_LENGTH, ZERO_PAD)}M`;
   } else {
-    return `${String(totalMinutes).padStart(2, ZERO_PAD)}M`;
+    return `${String(totalMinutes).padStart(TARGET_LENGTH, ZERO_PAD)}M`;
   }
 };
 
