@@ -184,7 +184,7 @@ export default class PointEditView extends AbstractStatefulView {
       ?.addEventListener('click', this.#handleCloseButtonClick);
 
     this.element.querySelector('.event__type-group')
-      .addEventListener('click', this.#selectedTypeHandler);
+      .addEventListener('change', this.#selectedTypeHandler);
 
     this.element.querySelector('.event__input--destination')
       .addEventListener('input', this.#selectedDestinationHandler);
@@ -219,12 +219,10 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #selectedTypeHandler = (evt) => {
-    if (evt.target.classList.contains('event__type-input')) {
-      this.updateElement({
-        type: evt.target.value,
-        offers: []
-      });
-    }
+    this.updateElement({
+      type: evt.target.value,
+      offers: []
+    });
   };
 
   #priceChangeHandler = (evt) => {

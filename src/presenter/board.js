@@ -8,7 +8,6 @@ import { SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import { sortDay, sortTime, sortDate } from '../utils/point.js';
 import {filter} from '../utils/filter.js';
 import NewPointPresenter from './new-point.js';
-import LoadingView from '../view/loading-view.js';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,
@@ -21,7 +20,6 @@ export default class Board {
   #filterModel = null;
 
   #pointListComponent = new EventsListView();
-  #loadingComponent = new LoadingView();
   #sortComponent = null;
   #noPointComponent = null;
   #pointPresenter = new Map();
@@ -115,24 +113,27 @@ export default class Board {
   #renderEmptyState() {
     this.#noPointComponent = new NoPointView({
       filterType: this.#filterType,
-      isApiError: this.#pointsModel.isApiError
+      isApiError: this.#pointsModel.isApiError,
+      isLoading: this.#isLoading
     });
 
     render(this.#noPointComponent, this.#boardContainer);
   }
 
   #renderPointList() {
+
     render(this.#pointListComponent, this.#boardContainer);
 
     for (let i = 0; i < this.points.length; i++) {
       this.#renderPoint(this.points[i], this.offers, this.destinations);
     }
+
   }
 
   #renderBoard() {
+    remove(this.#noPointComponent);
     if (this.#isLoading) {
-      this.#renderLoading();
-      return;
+      return this.#renderEmptyState();
     }
 
     if (this.points.length === 0 || this.#pointsModel.isApiError) {
@@ -140,6 +141,7 @@ export default class Board {
     }
 
     this.points.sort(sortDate);
+
     this.#renderSort();
     this.#renderPointList();
   }
@@ -202,7 +204,7 @@ export default class Board {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        remove(this.#loadingComponent);
+        remove(this.#noPointComponent);
         if (this.#newPointButtonComponent) {
           this.#newPointButtonComponent.element.disabled = false;
         }
@@ -210,13 +212,6 @@ export default class Board {
         break;
     }
   };
-
-  #renderLoading() {
-    render(this.#loadingComponent, this.#boardContainer);
-    if (this.#newPointButtonComponent) {
-      this.#newPointButtonComponent.element.disabled = true;
-    }
-  }
 
   #handleModeChange = () => {
     this.#newPointPresenter.destroy();
@@ -229,7 +224,7 @@ export default class Board {
     this.#pointPresenter.clear();
 
     remove(this.#sortComponent);
-    remove(this.#loadingComponent);
+    this.#isLoading = false;
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
