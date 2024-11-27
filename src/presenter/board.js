@@ -1,13 +1,13 @@
 import { remove, render} from '../framework/render.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-import ListSortView from '../view/sort-view.js';
+import ListSortView from '../view/list-sort-view.js';
 import EventsListView from '../view/events-list-view.js';
 import NoPointView from '../view/no-point-view.js';
-import PointPresenter from './point.js';
+import PointPresenter from './point-presenter.js';
 import { SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import { sortDay, sortTime, sortDate } from '../utils/point.js';
 import {filter} from '../utils/filter.js';
-import NewPointPresenter from './new-point.js';
+import NewPointPresenter from './new-point-presenter.js';
 
 const TimeLimit = {
   LOWER_LIMIT: 350,

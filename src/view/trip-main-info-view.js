@@ -8,7 +8,7 @@ const calculateTripDates = (points) => {
     return '';
   }
 
-  const sortedPoints = points.slice().sort((a, b) => dayjs(a.dateFrom).diff(dayjs(b.dateFrom)));
+  const sortedPoints = points.slice().sort((itemA, itemB) => dayjs(itemA.dateFrom).diff(dayjs(itemB.dateFrom)));
 
   const tripStart = dayjs(sortedPoints[0].dateFrom).format('DD MMM');
   const tripEnd = dayjs(sortedPoints[sortedPoints.length - 1].dateTo).format('DD MMM');
@@ -22,26 +22,26 @@ function generateTripValue (points, offers) {
   points.forEach((point) => {
     total += point.basePrice;
 
-    const currentOffersObject = offers.find((offer) => offer.type === point.type);
+    const currentOffers = offers.find((offer) => offer.type === point.type);
 
     point.offers.forEach((chosenOfferId) => {
-      total += currentOffersObject.offers.find((offer) => offer.id === chosenOfferId).price;
+      total += currentOffers.offers.find((offer) => offer.id === chosenOfferId).price;
     });
   });
 
   return total;
 }
 
-const createTemplateTitle = (points, destinationList) => {
+const createTemplateTitle = (points, destinationsList) => {
 
-  if (points.length === 0 || destinationList.length === 0) {
+  if (points.length === 0 || destinationsList.length === 0) {
     return '';
   }
 
   const [titleBegin, titleMiddle, titleEnd] = [
-    getDestinationNameById(points[0].destination, destinationList),
-    points[1] ? getDestinationNameById(points[1].destination, destinationList) : '',
-    getDestinationNameById(points[points.length - 1].destination, destinationList),
+    getDestinationNameById(points[0].destination, destinationsList),
+    points[1] ? getDestinationNameById(points[1].destination, destinationsList) : '',
+    getDestinationNameById(points[points.length - 1].destination, destinationsList),
   ];
 
   switch (points.length) {
@@ -66,9 +66,9 @@ const createTemplateCost = (points, offerList) => {
 };
 
 
-const createTripMainInfoTemplate = (points, destinationList, offerList) => {
+const createTripMainInfoTemplate = (points, destinationsList, offerList) => {
 
-  const templateTitle = createTemplateTitle(points, destinationList);
+  const templateTitle = createTemplateTitle(points, destinationsList);
 
   return (`<section class="trip-main__trip-info  trip-info">
       <div class="trip-info__main">

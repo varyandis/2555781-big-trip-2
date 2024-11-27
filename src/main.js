@@ -1,13 +1,13 @@
 import {remove, render} from '../src/framework/render.js';
 import NoPointView from './view/no-point-view.js';
 import { FilterType } from './const.js';
-import FilterPresenter from './presenter/filter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
 import Board from './presenter/board.js';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import NewPointButtonView from './view/new-point-button-view.js';
 import PointsApiService from './points-api-service.js';
-import TripInfoPresenter from './presenter/info-presenter.js';
+import TripInfoPresenter from './presenter/trip-info-presenter.js';
 
 const AUTHORIZATION = `Basic ${Math.random().toString(16).slice(2)}`;
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';

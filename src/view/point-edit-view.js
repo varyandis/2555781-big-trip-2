@@ -2,7 +2,7 @@ import he from 'he';
 import { getOffersByType, getDestinationById, getDestinationNameById } from '../utils/point.js';
 import { isFalsy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import { EVENT_TYPE } from '../const.js';
+import { EVENT_CATEGORIES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateEdite } from '../utils/date.js';
 import flatpickr from 'flatpickr';
@@ -27,15 +27,15 @@ const ResetButtonTitle = {
 
 const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 
-  const listOffer = getOffersByType(type, offerList);
-  if (isFalsy(listOffer)) {
+  const listOffers = getOffersByType(type, offerList);
+  if (isFalsy(listOffers)) {
     return '';
   }
 
   return `<section class="event__section  event__section--offers">
                     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
                     <div class="event__available-offers">
-                    ${listOffer.map(({id, title, price}) => `<div class="event__offer-selector"><input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}" ${(offers.includes(id)) ? 'checked' : ''} data-selected-offers="${id}" ${isDisabled ? 'disabled' : ''}>
+                    ${listOffers.map(({id, title, price}) => `<div class="event__offer-selector"><input class="event__offer-checkbox  visually-hidden" id="event-offer-${type}-${id}" type="checkbox" name="event-offer-${type}" ${(offers.includes(id)) ? 'checked' : ''} data-selected-offers="${id}" ${isDisabled ? 'disabled' : ''}>
             <label class="event__offer-label" for="event-offer-${type}-${id}">
                 <span class="event__offer-title">${title}</span>
                 &plus;&euro;&nbsp;
@@ -46,8 +46,8 @@ const createOffersTemplate = (offers, type, offerList, isDisabled) => {
 };
 
 
-const createDestinationTemplate = (destination, destinationList) => {
-  const destinationPoint = getDestinationById(destination, destinationList);
+const createDestinationTemplate = (destination, destinationsList) => {
+  const destinationPoint = getDestinationById(destination, destinationsList);
 
   if (isFalsy(destination) || !destinationPoint.description) {
     return '';
@@ -69,9 +69,9 @@ ${(pictures.length === 0) ? '' : `<div class="event__photos-container">
   );
 };
 
-const createDestinationListTemplate = (destinationList) => destinationList.map(({name}) => `<option value="${name}"></option>`);
+const createdestinationsListTemplate = (destinationsList) => destinationsList.map(({name}) => `<option value="${name}"></option>`);
 
-const createEventTypeItem = (id, typePoint, isDisabled) => EVENT_TYPE.map((type) => `<div class="event__type-item">
+const createEventTypeItem = (id, typePoint, isDisabled) => EVENT_CATEGORIES.map((type) => `<div class="event__type-item">
                           <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === typePoint) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
                           <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${he.encode(capitalizeFirstLetter(type))}</label>
                         </div> `).join('');
@@ -83,11 +83,11 @@ const createResetButton = (id, isDeleting) => {
   return `<button class="event__reset-btn" type="reset">${isDeleting ? 'Deleting...' : 'Delete'}</button>`;
 };
 
-const createPointEditTemplate = (point, offerList, destinationList) => {
+const createPointEditTemplate = (point, offerList, destinationsList) => {
   const {basePrice, dateFrom, dateTo, destination, id, type, offers, isDisabled, isSaving, isDeleting} = point;
   const dateFromHumanize = humanizePointDueDateEdite(dateFrom);
   const dateToHumanize = humanizePointDueDateEdite(dateTo);
-  const destinationPoint = getDestinationById(destination, destinationList);
+  const destinationPoint = getDestinationById(destination, destinationsList);
 
   return (
     `<li class="trip-events__item">
@@ -114,8 +114,8 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                     <label class="event__label  event__type-output" for="event-destination-${id}">
                       ${type}
                     </label>
-                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationNameById(destination, destinationList)}" list="destination-list-${id}" ${isDisabled ? 'disabled' : ''}>
-                    <datalist id="destination-list-${id}">${createDestinationListTemplate(destinationList)}
+                    <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationNameById(destination, destinationsList)}" list="destination-list-${id}" ${isDisabled ? 'disabled' : ''}>
+                    <datalist id="destination-list-${id}">${createdestinationsListTemplate(destinationsList)}
                     </datalist>
                   </div>
 
@@ -143,7 +143,7 @@ const createPointEditTemplate = (point, offerList, destinationList) => {
                 ${(Boolean(destinationPoint?.description) || Boolean(destinationPoint?.pictures) || (getOffersByType(type, offerList).length !== 0)) ? `<section class="event__details">
                   ${createOffersTemplate(offers, type, offerList, isDisabled)}
 
-                  ${createDestinationTemplate(destination, destinationList)}
+                  ${createDestinationTemplate(destination, destinationsList)}
                 </section>` : ''}
               </form>
               </li>`

@@ -1,6 +1,6 @@
 
 import {remove, render, RenderPosition, replace} from '../framework/render';
-import TripMainInfoView from '../view/info-view';
+import TripMainInfoView from '../view/trip-main-info-view';
 
 export default class TripInfoPresenter {
   #tripInfoContainerElement = null;

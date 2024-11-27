@@ -12,11 +12,9 @@ const TARGET_LENGTH = 2;
 
 const getOffersByType = (typePoint, offers) => offers.find((item) => item.type === typePoint).offers;
 
-const getDestinationById = (id, destinationList) => destinationList.find((item) => item.id === id);
+const getDestinationById = (id, destinationsList) => destinationsList.find((item) => item.id === id);
 
-const getDestinationNameById = (destinationId, destinationList) => destinationList.find((index) => index.id === destinationId).name;
-
-const getDestinationByName = (destinationName, destinationList) => destinationList.find((index) => index.name === destinationName);
+const getDestinationNameById = (destinationId, destinationsList) => destinationsList.find((index) => index.id === destinationId).name;
 
 const isPointFuture = (dateFrom) => dateFrom && dayjs().isBefore(dayjs(dateFrom));
 
@@ -49,17 +47,16 @@ const getTimeDifference = (dateFrom, dateTo) => {
   }
 };
 
-const sortDay = (a, b) => b.basePrice - a.basePrice;
+const sortDay = (itemA, itemB) => itemB.basePrice - itemA.basePrice;
 
-const sortDate = (a, b) => new Date(a.dateFrom) - new Date(b.dateFrom);
+const sortDate = (itemA, itemB) => new Date(itemA.dateFrom) - new Date(itemB.dateFrom);
 
-const sortTime = (a, b) => new Date(a.dateFrom) - new Date(a.dateTo) - (new Date(b.dateFrom) - new Date(b.dateTo));
+const sortTime = (itemA, itemB) => new Date(itemA.dateFrom) - new Date(itemA.dateTo) - (new Date(itemB.dateFrom) - new Date(itemB.dateTo));
 
 export {
   getOffersByType,
   getDestinationById,
   getDestinationNameById,
-  getDestinationByName,
   isPointFuture,
   isPointPresent,
   isPointPast,

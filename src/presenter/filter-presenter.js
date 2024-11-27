@@ -1,5 +1,5 @@
 import {render, replace, remove} from '../framework/render.js';
-import TripFiltersView from '../view/filters-view.js';
+import TripFiltersView from '../view/trip-filters-view.js';
 import {filter} from '../utils/filter.js';
 import {FilterType, UpdateType} from '../const.js';
 

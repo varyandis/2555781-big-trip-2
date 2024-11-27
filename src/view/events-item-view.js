@@ -5,8 +5,8 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizePointDueTime, humanizePointDueDateItem} from '../utils/date.js';
 
 const createSelectedOffersTemplate = (offers, type, offerList) => {
-  const listOffer = getOffersByType(type, offerList);
-  return listOffer.map(({id, title, price}) => `${(offers.includes(id)) ? `<ul class="event__selected-offers">
+  const listOffers = getOffersByType(type, offerList);
+  return listOffers.map(({id, title, price}) => `${(offers.includes(id)) ? `<ul class="event__selected-offers">
                   <li class="event__offer">
                     <span class="event__offer-title">${title}</span>
                     &plus;&euro;&nbsp;
@@ -16,7 +16,7 @@ const createSelectedOffersTemplate = (offers, type, offerList) => {
   ).join('');
 };
 
-const createEventsItemTemplate = (point, offerList, destinationList) => {
+const createEventsItemTemplate = (point, offerList, destinationsList) => {
 
   const {basePrice, dateFrom, dateTo, isFavorite, offers, type, destination} = point;
 
@@ -25,7 +25,7 @@ const createEventsItemTemplate = (point, offerList, destinationList) => {
   const dateFromHumanize = humanizePointDueDateItem(dateFrom);
   const typePoint = capitalizeFirstLetter(type);
   const pointFavorite = isFavorite ? 'event__favorite-btn--active' : '';
-  const namePoint = getDestinationNameById(destination, destinationList);
+  const namePoint = getDestinationNameById(destination, destinationsList);
 
 
   return (
