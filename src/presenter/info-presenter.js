@@ -17,7 +17,6 @@ export default class TripInfoPresenter {
   }
 
   init() {
-
     const prevTripInfoComponent = this.#tripInfoComponent;
     const points = this.#pointsModel.points;
     const destinations = this.#pointsModel.destinations;
