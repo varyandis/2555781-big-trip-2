@@ -2,7 +2,7 @@ import he from 'he';
 import { getOffersByType, getDestinationById, getDestinationNameById } from '../utils/point.js';
 import { isFalsy } from '../utils/common.js';
 import { capitalizeFirstLetter } from '../utils/common.js';
-import { EVENT_CATEGORIES } from '../const.js';
+import { TYPE_EVENTS } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizePointDueDateEdite } from '../utils/date.js';
 import flatpickr from 'flatpickr';
@@ -69,9 +69,9 @@ ${(pictures.length === 0) ? '' : `<div class="event__photos-container">
   );
 };
 
-const createdestinationsListTemplate = (destinationsList) => destinationsList.map(({name}) => `<option value="${name}"></option>`);
+const createDestinationsListTemplate = (destinationsList) => destinationsList.map(({name}) => `<option value="${name}"></option>`);
 
-const createEventTypeItem = (id, typePoint, isDisabled) => EVENT_CATEGORIES.map((type) => `<div class="event__type-item">
+const createEventTypeItem = (id, typePoint, isDisabled) => TYPE_EVENTS.map((type) => `<div class="event__type-item">
                           <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${(type === typePoint) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
                           <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${he.encode(capitalizeFirstLetter(type))}</label>
                         </div> `).join('');
@@ -115,7 +115,7 @@ const createPointEditTemplate = (point, offerList, destinationsList) => {
                       ${type}
                     </label>
                     <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${(!destination) ? '' : getDestinationNameById(destination, destinationsList)}" list="destination-list-${id}" ${isDisabled ? 'disabled' : ''}>
-                    <datalist id="destination-list-${id}">${createdestinationsListTemplate(destinationsList)}
+                    <datalist id="destination-list-${id}">${createDestinationsListTemplate(destinationsList)}
                     </datalist>
                   </div>
 
